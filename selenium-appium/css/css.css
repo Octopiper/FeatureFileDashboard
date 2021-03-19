@@ -1,0 +1,419 @@
+body{
+	margin: 0; padding: 0;
+	background-color: rgb(28, 32, 34);
+}
+
+.toggable-selector-name {
+	display: none;
+}
+select {
+	background-color: rgb(52 99 134); /*rgb(70, 74, 77);*/
+	color: white; /*#f7f4f4;*/
+	font-size: 12px;
+	padding: 5px;
+	padding-right: 1em;	
+	border: 0;
+	border-radius: 3px;
+	margin:0;
+	font-weight: 100;
+	font-size: 13px;
+	max-width: 200px;
+
+}
+
+.toolbarContainer {
+	display: flex;
+	background-color: black;
+	color: white;
+	border-bottom: 1px solid rgb(88, 91, 94);
+	position: fixed;
+	z-index: 1;
+	width: 100%;
+}
+
+.toolbarwrapper {
+	height: 100%; 
+}
+.selBrowser {
+	margin: 0 0 -10px 0;
+}
+.selPage {
+	margin-top: -10px;
+}
+.app-page-container {
+	margin: 0 15px -10px 10px;
+}
+.bluelabel {
+	margin: 0 0 10px 0;
+	color:#8ba3bd;
+	background-color:#122436;
+	padding: 5px;
+	height: 20px;
+	display: inline-block;
+	border-radius: 5px;
+	border: 1px solid #000000;
+}
+.tablesContainer{
+	width: 100%; display: flex; 
+	margin: 0; padding: 0;
+	background-color: rgb(28, 32, 34);
+	padding-top: 100px; 
+}
+.elementsTable {
+	max-width: 49%; margin: 0 15px 0 0; padding: 0;
+}
+.ffTable{
+	width: 50%; margin: 0; padding: 0;
+	top: 104px;
+	/*position: fixed; 
+	z-index: 2;
+	margin-left: 50%; */
+}
+.filterByType {
+	/*margin-right: 30px;*/
+	margin: 0 auto;
+	display: none;
+}
+table th {
+	background-color: black;
+	color: white;
+	font-size: 14px;
+}
+/*
+table, td, th {
+	border: 1px solid black;
+}
+*/
+th, td {
+	padding: 5px;
+	border-radius: 8px;
+}
+table tr:nth-child(even){
+	background-color:rgb(221, 226, 233);
+		/*#f2f2f2;*/
+
+}
+table tr:nth-child(odd){
+	background-color: #ababab;
+
+}
+th, td {
+	padding: 5px;
+	border-radius: 8px;
+}
+
+
+.xmlinput {
+	margin: 0 10px 30px 0;
+
+}
+
+.row {
+	width: 100%; 
+	/*display: flex;
+	margin: 0; padding: 0;
+*/
+}
+
+
+/*Hiding the select arrow for IE10*/
+select::-ms-expand {
+	display: none;
+}
+.addCase {
+	background-color: rgba(0,0,0,.2);
+	text-align: center;
+	border-radius: 4px; color:white; padding: 2px 0 2px 0;
+	cursor: default;
+}
+.addCase:active{
+	background-color:rgba(0,0,0,.8);
+}
+.delCase{
+	text-align: center; 
+}
+.action-input-width {
+	width: 60px;
+}
+
+.underlined	{
+	text-decoration: underline! important;
+}
+.no-underlined	{
+	text-decoration: none! important;
+}
+.greenButton {
+	border-color: rgb( 144, 187, 63 ) !important; 
+	border-style: solid !important; 
+	border-style: solid !important;
+	border-width: 1px !important; 
+	border-color: rgb( 111, 158, 24 ) !important; 
+	border-radius: 3px !important; 
+	background-color: #90bb3f; 
+}
+.nogreenButton {
+	background-color:"";
+}
+.error {
+	color: rgba(221, 53, 53, 0.842);
+}
+.csrLinks {
+	text-decoration: none;
+	color: #1B5383;
+}
+.csrLinks:hover {
+	text-decoration: underline;
+	color: #AF0000;
+}
+.tableexport-caption {
+	
+	position: absolute; top: 30%; margin-left:1%; z-index:1;
+}
+.modal {
+	display: none; /* Hidden by default */
+	position: absolute; /* Stay in place */
+	z-index: 1; /* Sit on top */
+	padding-top: 100px; /* Location of the box */
+	left: 0;
+	top: 0;
+	width: 100%; /* Full width */
+	height: 100%; /* Full height */
+	overflow: auto; /* Enable scroll if needed */
+	background-color: rgb(0,0,0); /* Fallback color */
+	background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+.callTo-modal {
+	display: none; /* Hidden by default */
+	position: absolute; /* Stay in place */
+	z-index: 1; /* Sit on top */
+	padding-top: 100px; /* Location of the box */
+	left: 0;
+	top: 0;
+	width: 100%; /* Full width */
+	height: 100%; /* Full height */
+	overflow: auto; /* Enable scroll if needed */
+	background-color: rgb(0,0,0); /* Fallback color */
+	background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+/* Modal Content */
+.modal-content {
+  background-color: #fefefe;
+  margin: auto;
+  width: 80%;
+  padding: 20px;
+  border: 1px solid #888;
+  height: auto;
+  overflow-y: scroll;
+}
+
+/* The Close Button */
+.close {
+  color: white;
+  font-size: 28px;
+  font-weight: bold;
+}
+.modalClose {
+  color: #aaaaaa;
+  font-size: 28px;
+  float: right;
+  font-weight: bold;
+}
+.import-close {
+	color: #aaaaaa;
+	font-size: 28px;
+	float: right;
+	margin-right: 5px;
+	font-weight: bold;
+}
+.import-close:focus,
+.import-close:hover {
+	color: #000;
+	text-decoration: none;
+	cursor: pointer;
+}
+.modalClose:hover,
+.modalClose:focus {
+  color: #000;
+  text-decoration: none;
+  cursor: pointer;
+}
+.close:hover,
+.close:focus {
+  color: #000;
+  text-decoration: none;
+  cursor: pointer;
+}
+.button-default {
+	/*display: none;*/
+}
+
+.toolbarExport{
+	/*width: 10%;
+	margin: 0 auto;
+	*/
+	margin-left: 10px;
+}
+
+.toolbarExport p { 
+	margin-top: 1.5em;
+}
+
+.searchFilter {
+	/*width: 15%;
+	margin: 0 auto;
+	*/
+	margin-left: 10px;
+}
+
+#toEx{
+	/*table-layout: fixed;*/
+	width: 50%; margin: 0; padding: 0;
+	background-color: rgb(28, 32, 34);
+}
+.tblCSS {
+	width: 50%; margin: 0; padding: 0;
+}
+hr {
+	border-top: 1px solid black;
+	opacity: .1
+}
+.loader {
+	position: absolute;
+	left: 50%; top: 100px; 
+	margin-top: 100px;
+	border: 2px solid #f3f3f3; /* Light grey */
+	border-top: 2px solid #3498db; /* Blue */
+	border-radius: 50%;
+	width: 100px;
+	height: 100px;
+	animation: spinner 1s linear infinite;
+}
+
+@keyframes spinner {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+.cases-objName-width{
+	overflow-x: auto; max-width: 275px;
+}
+.element-name-width {
+	overflow-x: auto;
+	max-width: 550px;
+}
+.upload-or {
+  border: solid black;
+  border-width: 0 3px 3px 0;
+  display: inline-block;
+  padding: 3px;
+  transform: rotate(-135deg);
+  -webkit-transform: rotate(-135deg);
+}
+.upload-or-button{
+	background-color: white; text-align: center;
+	border-radius: 4px; color:black; 
+	padding: 6px; margin: 2px;
+	cursor: pointer; 
+}
+.upload-text{
+	margin: 0; padding: 0;
+	font-family: sans-serif;
+    font-weight: bold;
+}
+.upload-sheets {
+	margin: 0 4px;
+}
+/*  styles related to the IMPORT Component*/
+.droppable {
+	border: 2px dashed grey;
+	padding: 0 25%;
+}
+.choose-file{
+	color: rgb(84, 183, 223);
+    display: block;
+    text-align: center;
+	cursor: pointer;
+}
+.choose-file:hover {
+	color: rgb(42, 136, 173);
+}
+.inline-element {
+	display: inline-block;
+}
+.uploadXLSXInput {
+	display: none;
+}
+.highlightdrop {
+	background-color: rgb(191, 201, 212);
+}
+.upload-done-message {
+	display: none;
+	color: rgb(45, 151, 18);
+}
+.sheet-list li{
+	list-style-type: none;
+	background-color: skyblue;
+	display: inline-block;
+	padding: 5px;
+	color: white;
+	border-radius: 3px;
+	margin: 0 3px;
+	cursor: pointer;
+	margin: 1px;
+}
+.import-container{
+	position: fixed;
+    z-index: 3;
+    left: 0;
+    margin: 0 auto;
+    padding: 0;
+    display: none;
+    width: 600px;
+    background-color: white;
+    right: 0;
+    /*height: 200px;*/
+    border: 1px solid grey;
+}
+.import-container-or{
+	position: fixed;
+    z-index: 3;
+    left: 0;
+    margin: 0 auto;
+    padding: 0;
+    width: 600px;
+    background-color: white;
+    right: 0;
+    height: 200px;
+    border: 1px solid grey;
+}
+.close-import-screen{
+	position: absolute;
+	top: 0;
+	right: 0;
+	display: inline-block;
+	margin: 5px 10px 0 0;
+	background-color: lightgray;
+	border-radius: 4px;
+	padding: 2px;
+}
+.input-xls-select{
+	display: none;
+}
+.xls-or-select{
+	display: none;
+}
+.svgStyle{
+	width: auto;
+    fill: rgb(107, 109, 121);
+    height: 50px;
+	margin-top: 50%;
+}
+.ui-autocomplete { height: 200px; overflow-y: scroll; overflow-x: hidden;}
+.menu-button {
+	background-color: #346386;
+    border: none;
+    margin: 2px;
+    padding: 3px;
+    border-radius: 2px;
+    color: white;
+}
+}

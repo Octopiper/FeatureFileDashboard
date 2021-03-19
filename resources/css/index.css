@@ -1,0 +1,90 @@
+*   {
+    font-family: Helvetica, Arial, sans-serif;
+    }  
+
+h1  {
+    color:#f36e21;
+    font-size: 60px;
+    }
+
+p, li {
+    font-size: 18px;
+    }
+
+a   {
+    margin:0;
+    padding: 0;
+    text-decoration: none;
+    color: white;
+    }
+
+.header img {
+    padding-left: 50px;
+    float: left;
+    width: 71px;
+    height: 71px;
+    }
+
+.header h1 {
+    position: relative;
+    left: 5px;
+    }
+.options  {
+    margin:auto;
+    text-align: center;
+
+}
+
+.button {
+    background-color: lightgray;/*background-color: #f36e21; /* EVTC Color */
+    border: none;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    transition-duration: 0.4s;
+    margin: 4px 2px;
+    cursor: pointer;
+}
+
+.button-mobile {
+    background-color: lightgray;/*background-color: #f36e21; /* EVTC Color */
+    border: none;
+    color: white;
+    padding: 15px 16px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    transition-duration: 0.4s;
+    margin: 4px 2px;
+    cursor: pointer;  
+}
+.CIBP:hover {
+    background-color: rgba(0, 0, 105, 0.863);
+}
+
+.PICS:hover {
+    background-color: rgba(0, 0, 105, 0.863);
+}
+.EBTS:hover {
+    background-color:  #f36e21;
+}
+
+.PCAS:hover {
+    background-color:rgb(88, 135, 221);
+}
+.PAYS:hover {
+    background-color: #0086b3;
+}
+.PICS:hover span {
+    color:red;
+    transition-duration: 0.4s;
+}
+.svgStyle{
+    width: auto;
+    fill: rgb(107, 109, 121);
+    height: 15px;
+    margin: 0; padding: 0;
+}
