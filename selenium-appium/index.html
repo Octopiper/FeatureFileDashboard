@@ -1844,7 +1844,11 @@
 									
 									<input className="menu-button" type="button" value="Export" onClick={this.export}/>	
 								</div>
-								
+								<div className="toolbarExport">
+									<p>Wiki</p>
+									<input className="menu-button" value="Wiki" type="button" onClick={() => window.open("../Dashboard_wikiV2.htm", "_blank")}/>
+									
+								</div>
 							</div>
 						</div>		
 						
@@ -2492,7 +2496,12 @@
 			
 		}
 		componentDidMount() {
-			
+			//$("#autocomplete").autocomplete(...).data("autocomplete")._renderItem = function( ul, item) {
+				//return $( "<li></li>" )
+				//.data( "item.autocomplete", item )
+				//.append( $( "<a></a>" ).html( item.label ) )
+				//.appendTo( ul );
+			//};
 		}
 
 		render(){
