@@ -15,7 +15,27 @@
   </div>
 
   <div id="options" class="options"></div>
+  <div class="project-id">
+    <div>
+      <span>Gitlab Repository ID</span><input id="repo-id" type="text" /><span><button type="button" value="Go" onclick="goToRepoByID()">Go</button></span>
+    </div>
+  </div>
 <script>
+  function goToRepoByID(){
+    //href="selenium-appium/index.html?id=devcibp"'
+    var repoId = document.getElementById("repo-id").value;
+    
+    if (repoId == ""){
+      alert("Repository ID must not be empty");
+    }
+    else if (isNaN(repoId)){
+      alert("Repository ID must be a number");
+    }
+    else {
+      window.open("selenium-appium/index.html?respositoryid=" + repoId);
+    }
+    
+  }
   function constructButtons(buttonsArray){
     for (let i=0; i <= buttonsArray.length - 1; i++){
 
@@ -31,7 +51,6 @@
 	  
 		let parent = document.getElementById("options");
 		  parent.appendChild(node);
-
     }
   }
 

@@ -34,7 +34,15 @@ a   {
     text-align: center;
 
 }
-
+.project-id {
+    text-align: center;
+}
+.project-id-link {
+    color: orange;
+    background-color: lightgray;
+    padding: 2px;
+    border-radius: 3px;
+}
 .button {
     background-color: lightgray;/*background-color: #f36e21; /* EVTC Color */
     border: none;

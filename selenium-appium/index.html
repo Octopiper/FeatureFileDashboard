@@ -55,6 +55,7 @@
 							gitlabProjectsName: [],//"CIBP", "EBSS", "PAYS", "EBTS", "PCAS"
 							gitlabListOfProjects: ["DevCIBP", "QACIBP", "PICS", "PAYS", "EBTS", "PCAS"],
 							gitlabProjectID: [492, 961, 701, 743, 604, 750],
+							gitlabDynamicProjectID: 0,
 							projectBranches: [],
 							OR: [],
 							browserNames: [],
@@ -64,6 +65,7 @@
 							pagesDropdown: [],
 							elements: [],
 							filteredElements: [],
+							globalFilteredElements: [],
 							cases: [],				
 							actions: ["Tap","RotateDevice", "SwitchContext", "ScrollDown", "SwipeDownwards","SwipeUpwards", "LongPress", "TapIfattributeIs", "Press", "SwitchFrame", "SelectElement", "OpenApp", "Input", "InputIfExists", "DoMathOperations", "CallTo", "Click", "ClickJS", "ClickIfExists", "Verify", "SelectByIndex", "InputIfExistsAndPressEnter", "InputDateOnCalendar", "ClickInsideTable", "ClickOnCheckboxInTable", "Hover", "GetValue", "GetText", "ClickIfCheckboxIsUnselected", "GetCheckboxState", "SwitchTab", "OpenNewTab", "CloseTab", "NavigateTo", "WaitFor", "SetTableRow", "SwipeUpwards", "SwipeDownwards", "Exit", "HandleAlert"],
 							actionsss: [],
@@ -93,7 +95,12 @@
 							sourcesOptions: ["Gitlab", "Manual OR upload"],
 							renderSourceOption: "none",
 							token: "private_token=y-cu6cTeV4QM_zquJpte",
-							callToFeatures: []
+							callToFeatures: [],
+							globalFilter: false,
+							globalSearchCheckbox: false,
+							iORProgressCount: 0,
+							aPagesDropdownCount: 0
+							//repoID: 
                         };
             //this.constructWebElementHTML = this.constructWebElementHTML.bind(this);    
 			         
@@ -126,6 +133,9 @@
 			this.fetchBranchFeatures = this.fetchBranchFeatures.bind(this);
 			this.ShowCallToSteps = this.ShowCallToSteps.bind(this);
 			this.renderCallToTable = this.renderCallToTable.bind(this);
+			this.handleGlobalSearchCheckbox = this.handleGlobalSearchCheckbox.bind(this);
+			this.changeInputSearchValue = this.changeInputSearchValue.bind(this);
+			this.stopSpinner = this.stopSpinner.bind(this);
 			//this.handleByTextFilter = this.handleByTextFilter.bind(this);
 			//this.handleByElementTypeChange = this.handleByElementTypeChange.bind(this);
         }
@@ -148,11 +158,65 @@
 			let sInputURL = window.location.href;
 			
 			let aURLParameters = sInputURL.split("?app=");
+			let respositoryidParameters = sInputURL.split("?respositoryid=");
+			let repoID = respositoryidParameters[1];
 
-			if (aURLParameters.length != 2){
+			if (false){//(aURLParameters.length != 2){
 				alert("Error: URL provided is incorrect. Please contact the developer for assitance.");
 			}
-			else{
+			else if (respositoryidParameters.length == 2){
+				let projectNames = this.state.gitlabListOfProjects;	//: ["DevCIBP", "QACIBP", "PICS", "PAYS", "EBTS", "PCAS"],
+				let projectIDs = this.state.gitlabProjectID;		//: [492, 961, 701, 743, 604, 750],
+
+				
+
+				let repoURL = "https://gitlab.evertecinc.com/api/v4/projects/" + repoID + "?private_token=y-cu6cTeV4QM_zquJpte";
+
+				//"https://gitlab.evertecinc.com/api/v4/projects/" + respositoryid
+				// get response.name
+				var xhttp = new XMLHttpRequest();
+				var _this = this;
+
+				var error = false;
+				var response; 
+				xhttp.onreadystatechange = function() {
+					if (this.readyState == 4){
+						if(this.status == 200) {
+						
+							
+							var response = JSON.parse(this.responseText);
+						
+							projectIDs.push(repoID);
+							projectNames.push(response.name);
+
+							_this.setState({
+								gitlabProjectsName: [response.name],
+								gitlabListOfProjects: projectNames,
+								gitlabProjectID: projectIDs,
+								gitlabDynamicProjectID: repoID,
+								sourceOption: "Gitlab",
+								renderSourceOption: "gitlab"
+							})
+							//_this.processFeaturesResponse(response, url);
+							
+						}
+						else {
+							//console.log(this.status);
+							error = true;
+						}
+					}
+					else {
+						console.log("error in repoURL: " + repoURL);
+					}
+					
+				};
+				xhttp.open("GET", repoURL, true);
+				xhttp.send();
+			
+			
+				
+			}
+			else if (aURLParameters.length == 2){
 				let project;
 				let sApp = aURLParameters[1].toUpperCase();
 
@@ -248,9 +312,9 @@
 			
 			//console.log("cases:", this.state.cases);
 			//console.log(obj);//obj.target.parentNode.rowIndex);
-			console.log(obj.target.parentNode.parentNode.parentNode.parentNode);
-			console.log(obj.target.parentNode.parentNode.rowIndex);
-			console.log(this.state.cases);
+			//console.log(obj.target.parentNode.parentNode.parentNode.parentNode);
+			//console.log(obj.target.parentNode.parentNode.rowIndex);
+			//console.log(this.state.cases);
 
 			let iClickedRow = obj.target.parentNode.parentNode.rowIndex;
 
@@ -273,12 +337,15 @@
 		}
 
 
-		addCase = objectInfo => {
+		addCase = (objectInfo, pageFromGlobalSearch) => {
 			
 			let caseInfo = 	this.state.cases;
+
+			let globalSearchCheckbox = this.state.globalSearchCheckbox;
+
 			var obj = {};
 			if (objectInfo == "placeholder-step"){
-				console.log("placeholder step added");
+				//console.log("placeholder step added");
 
 
 				obj.pageName = this.state.pageDropdownVal;
@@ -288,7 +355,7 @@
 				caseInfo.push(obj);
 			}
 			else if (objectInfo == "add-page"){
-				console.log("Page object added");
+				//console.log("Page object added");
 				
 				var pageName = this.state.pageDropdownVal;
 
@@ -304,11 +371,20 @@
 			}
 			else{
 
-				console.log("case added: " + objectInfo.name);
+				var pageName;
+
+				if (globalSearchCheckbox){
+					pageName = pageFromGlobalSearch;
+				}
+				else
+				{
+					pageName = this.state.pageDropdownVal;
+				}
+				//console.log("case added: " + objectInfo.name);
 
 				//console.log(this.state.pageNChilds[index + 1].childs);
 
-				var pageName = this.state.pageDropdownVal;
+				
 
 				if (pageName.indexOf('.xls') != -1){
 					pageName = pageName.substring(0, pageName.indexOf('.xls'));
@@ -348,12 +424,30 @@
 			);
 		}
 		*/
+		changeInputSearchValue(e){
+
+			
+			let sSearchText = e.target.value;
+
+			this.setState({
+				searchFilterValue: e.target.value
+			});
+
+			if (sSearchText == ""){
+				this.handleFilterChange("clear")
+			}
+		}
+		
 		handleFilterChange(e){// by type
 			
+			/*
 			var nodeName = event.target.nodeName;
 			var sElemType, sSearchText;
+			var globalFilter = true;
+
 			console.log(event.target.nodeName);
 			console.log(e.target.value);
+
 
 			if (nodeName.toLowerCase() == "input"){
 				sSearchText = e.target.value;
@@ -362,14 +456,128 @@
 					searchFilterValue: e.target.value
 				});
 			}
+			*/
 			
-		
-			var aByNameOrText = this.state.elements.filter((obj) => // replace elements by filteredElements
+
+			let sSearchText;
+			if (e == "clear"){
+				sSearchText = "";
+			}
+			else {
+				sSearchText = this.state.searchFilterValue;
+
+				if (this.state.globalSearchCheckbox == false && this.state.pageDropdownVal == "select"){
+					alert("You must toggle `Global Filter` to true to perform a global search, \r\n or \r\n select a page to start search")
+				}
+			}
+
+			var globalFilter = this.state.globalSearchCheckbox;
+			
+
+			let aElementsToFilter;
+
+			let OS_Name = this.state.osDropdownVal;
+
+			if (globalFilter && sSearchText != ""){ //this.state.globalFilter
+				this.setState({
+					showSpinner: true
+				})
+				/* object structure
+				{screenName: "CRSCommercialServicesEnrollment.xls", subPath: "none", objects: Array(12)}
+
+				-> objects => 	Object Name: "LinkCommercialServicesEnrollmentReport"
+								Selector Type: "xpath"
+								Selector Value: "//a[contains(text(),'View Commercial Services Enrollment Report')]"
+				*/
+
+
+				var globalObjectsPerOS;
+
+				switch (OS_Name){ //OS_Name
+
+					case "web":
+						globalObjectsPerOS = this.state.oWebScreenNObjects;
+						break;
+					case "ios":
+						globalObjectsPerOS = this.state.oIosScreenNObjects;
+						break;
+					case "android":
+						globalObjectsPerOS = this.state.oAndroidScreenNObjects;
+						break;
+					case "other mobile pages":
+						globalObjectsPerOS = this.state.oOtherMobileScreenNObjects;
+						break;										
+				}
+
+				var objectsToDisplay = [];
+				var objectsStruct = {};
+				var found = false;
+				var bWholeSeachFoundFlag = false;
+
+				for (let repo = 0; repo < globalObjectsPerOS.length; repo++){
+					
+					found = false;
+					console.log("repo: ", repo);
+					var objectsPerPage = globalObjectsPerOS[repo].objects.filter((obj, key) =>
+						{
+							console.log("key: ", key, "obj: ", obj);
+							let sSelectorValue = obj["Selector Value"];
+							if (typeof(sSelectorValue) == "number"){
+								sSelectorValue = `${sSelectorValue}`;
+
+							}
+							if (obj["Object Name"] != undefined && obj["Selector Value"] != undefined){
+								if ((obj["Object Name"].toLowerCase().indexOf(sSearchText.toLowerCase()) >= 0)
+									|| (sSelectorValue.toLowerCase().indexOf(sSearchText.toLowerCase()) >= 0)){ // colocar validación de isNan
+										found = true;
+										bWholeSeachFoundFlag = true;
+										return true;
+								}
+							}
+						});
+					
+					if (found){
+						objectsStruct.screenName = globalObjectsPerOS[repo].screenName;
+						objectsStruct.objects = objectsPerPage;
+						objectsToDisplay.push(objectsStruct);
+						//console.log("Se encontró: ", objectsToDisplay);
+						objectsStruct = {}
+					}
+					
+				}
+				if (!bWholeSeachFoundFlag){
+					var x = document.getElementById("snackbar");
+					x.className = "show";
+					setTimeout(function(){ x.className = x.className.replace("show", ""); }, 3000);
+					
+				}
+				//console.log("objectsToDisplay: " ,objectsToDisplay);
+
+				this.setState({
+					globalFilteredElements: objectsToDisplay,
+					showSpinner: false
+				})
+				//aElementsToFilter = "";
+			}
+			else if (globalFilter && sSearchText == ""){
+				this.setState({
+					globalFilteredElements: [],
+					showSpinner: false
+				});
+			}
+			else if((this.state.pageDropdownVal != "select") && (globalFilter == false)) {
+				this.setState({
+					showSpinner: true
+				})
+				aElementsToFilter = this.state.elements;
+			
+				var aByNameOrText = aElementsToFilter.filter((obj) => // replace elements by filteredElements
 					{
 						if (obj["Value"] != null){
 							if ((obj["Value"].toLowerCase().indexOf(sSearchText.toLowerCase()) >= 0) 
 								|| (obj["Object Name"].toLowerCase().indexOf(sSearchText.toLowerCase()) >= 0)
 								|| (obj["Selector Value"].toLowerCase().indexOf(sSearchText.toLowerCase()) >= 0)){
+									bWholeSeachFoundFlag = true;
 									return true; //obj["Value"].toLowerCase().indexOf(sSearchText.toLowerCase())
 							}
 							/*else if (obj["Object Name"].toLowerCase().indexOf(sSearchText.toLowerCase()) >= 0){
@@ -383,6 +591,7 @@
 						else {
 							if ((obj["Object Name"].toLowerCase().indexOf(sSearchText.toLowerCase()) >= 0)
 								|| (obj["Selector Value"].toLowerCase().indexOf(sSearchText.toLowerCase()) >= 0)){
+									bWholeSeachFoundFlag = true;
 									return true; //(obj["Object Name"].toLowerCase().indexOf(sSearchText.toLowerCase())  >= 0 );
 							}
 							/*else if (obj["Selector Value"].toLowerCase().indexOf(sSearchText.toLowerCase()) >= 0){
@@ -392,13 +601,28 @@
 						}
 					}
 				);
-				console.log("aByNameOrText", aByNameOrText);
+
+				if (!bWholeSeachFoundFlag){
+					var x = document.getElementById("snackbar");
+					x.className = "show";
+					setTimeout(function(){ x.className = x.className.replace("show", ""); }, 3000);
+					
+				}
+				//console.log("aByNameOrText", aByNameOrText);
 				this.setState({
-					filteredElements: aByNameOrText
+					filteredElements: aByNameOrText,
+					showSpinner: false
 				});
+			}
+			else if((this.state.pageDropdownVal == "select") && (globalFilter == true)) {
+
+			}
+			
 		}
 
         OSChange(event){
+
+			
 
 			this.hideToggableElements();
 
@@ -423,7 +647,7 @@
 			}
 			//browserPages
 			if (sSelectedOS != "select"){
-
+				
 				//let arrayIndex;
 				/*
 				for (let i = 0; i < this.state.os.length; i++){
@@ -437,32 +661,53 @@
 				//console.log("arrayIndex", arrayIndex);
 				//console.log("browserPages[arrayIndex]", this.state.browserPages[arrayIndex]);
 				this.setState({
-					osDropdownVal: event.target.value,
+					showSpinner: true,
+					osDropdownVal: sSelectedOS,//event.target.value,
 					pagesDropdown: aPagesDropdown,//this.state.browserPages[arrayIndex],
 					filteredElements: [],
 					sElementsFilter: "select",
-					pageDropdownVal: "select"
+					pageDropdownVal: "select",
+					aPagesDropdownCount: aPagesDropdown.length,
+					globalFilteredElements: [],
+					searchFilterValue: "",
+					globalSearchCheckbox: false
 					//pageDropdownVal: "select"
 				});
 
 			}
 			else{
 				this.setState({
-					osDropdownVal: event.target.value,
+					osDropdownVal: sSelectedOS,// event.target.value,
 					pagesDropdown: [],
 					filteredElements: [], //// new
+					globalFilteredElements: [],
 					sElementsFilter: "select",
 					oAndroidScreenNObjects: [],
-					aAndroidScreens: [],
-					aIosScreens: [],
+					//aAndroidScreens: [], //why[]?
+					//aIosScreens: [], //why[]?
 					oIosScreenNObjects: [],
 					oGitlabWebScreenNObjects: [],
-					aWebScreens: [],
-					os: []
+					//aWebScreens: [], //why[]?
+					//os: [],
+					showSpinner: false,
+					searchFilterValue: "",
+					globalSearchCheckbox: false
 				});
 			}
+			// IF GITLAB SOURCE THEN
+
+
+			if (this.state.sourceOption.toLowerCase() == "gitlab"){
+				
+				for (let p = 0; p < aPagesDropdown.length; p++){
+					this.fetchGitlabPageObjects(aPagesDropdown[p], sSelectedOS);
+
+					// puedo pasar el numero de paginas. En cada request colocar un counter cuando todos terminen, cambiar de estatus un flag.
+				}
+			}
+			
         }
-		fetchGitlabPageObjects(sPageName){
+		fetchGitlabPageObjects(sPageName, sSelectedOS){
 			var selectedProject = this.state.gitlabProjectName;
 			
 			var projects = this.state.gitlabListOfProjects;//this.state.gitlabProjectsName;
@@ -479,7 +724,7 @@
 				encodedPathAndName = sPageName;
 			}
 
-			if (this.state.osDropdownVal != "web"){
+			if (sSelectedOS != "web"){ //this.state.osDropdownVal
 				var url = "https://gitlab.evertecinc.com/api/v4/projects/" + idx + "/repository/files/mobile-keyword-test-automation-framework%2Fsrc%2Ftest%2Fresources%2Fobjectrepository%2F"+ encodedPathAndName +"/raw?" + this.state.token + "&ref=" + this.state.gitlabBranchName;
 			}
 			else {
@@ -506,18 +751,35 @@
 				if (this.readyState == 4){
 					if (this.status == 200){
 						var workbook = XLSX.read(data, {type:"array"});
-						console.log(workbook);
+						//console.log(workbook);
 					
-						workbook.SheetNames.forEach(function(sheet){
+						//workbook.SheetNames.forEach(function(sheet){
 							//var ul = document.getElementById("sheet-list");
 
-							aStepsToAppend = XLSX.utils.sheet_to_row_object_array(workbook.Sheets[sheet]) //, {header: 1}
+							aStepsToAppend = XLSX.utils.sheet_to_row_object_array(workbook.Sheets[workbook.SheetNames[0]])//workbook.Sheets[sheet]) //, {header: 1}
 							_this.updateORObjectsInfo(sPageName, aStepsToAppend);
+							
+							_this.setState({
+								iORProgressCount: _this.state.iORProgressCount + 1,
+							});
+
+							console.log("completed: " + _this.state.aPagesDropdownCount + "/" + _this.state.iORProgressCount);
+
+							if (_this.state.aPagesDropdownCount == _this.state.iORProgressCount){
+								_this.setState({
+									showSpinner: false,
+									iORProgressCount: 0
+								})
+
+								//alert("completed: " + _this.state.aPagesDropdownCount + "/" + _this.state.iORProgressCount);
+							}
+
 								//console.log(aStepsToAppend);
 							// _thisAppScope.setState({                          })
 							//}
 						
-						});	
+						//});	
+						
 					}
 				}
 			/* DO SOMETHING WITH workbook HERE */
@@ -536,10 +798,14 @@
 
 			this.setState({
 				pageDropdownVal: sPageName,
+				searchFilterValue: "",
+				globalSearchCheckbox: false
 			})
 
-			if (gitlabProjectName != "select"){
-				this.fetchGitlabPageObjects(sPageName);
+			let sOSName = this.state.osDropdownVal;
+
+			if (false) { //(gitlabProjectName != "select"){
+				this.fetchGitlabPageObjects(sPageName, sOSName);
 			}
 			
 			else {
@@ -632,6 +898,7 @@
 				aIosScreens: [],
 				oWebScreenNObjects: [],
 				aWebScreens: []
+				// should I also clear "elements" to []???
 			})
 		}
 		projectReset(){
@@ -651,6 +918,12 @@
 				aIosScreens: [],
 				oWebScreenNObjects: [],
 				aWebScreens: []
+				// should I also clear "elements" to []???
+			})
+		}
+		stopSpinner(){
+			this.setState({
+				showSpinner: false
 			})
 		}
 
@@ -684,6 +957,7 @@
 				var mobileFeaturesPath = "https://gitlab.evertecinc.com/api/v4/projects/" + idx + "/repository/tree?path=mobile-keyword-test-automation-framework/src/test/resources/features&ref=" + selectedBranch + "&" + this.state.token + "&per_page=100";
 				this.fetchBranchFeatures(webFeaturesPath);
 				this.fetchBranchFeatures(mobileFeaturesPath);
+				
 				//console.log(response);
 				//var aRepos = JSON.parse(response);
 				//_this.createGitlabORStructur e(response);
@@ -707,11 +981,12 @@
 						
 					}
 					else {
+						console.log("error in url: " + url);
 						error = true;
 					}
 				}
 				else {
-					console.log("error in url: " + url);
+					
 				}
 				
 			};
@@ -728,7 +1003,7 @@
 
 			var feature;
 			for (feature of aFeatures){
-				console.log("url: " + url);
+				//console.log("url: " + url);
 				let repo_pathName = feature.name;
 				let type = feature.type;
 				let isXLS = repo_pathName.indexOf('.xls'); 
@@ -754,7 +1029,7 @@
 					*/
 					var callToFeatures = this.state.callToFeatures;
 					callToFeatures.unshift({"path": url, "name": feature.name});
-					console.log("callToFeatures: ", callToFeatures);
+					//console.log("callToFeatures: ", callToFeatures);
 					this.setState({
 						callToFeatures: callToFeatures
 					})
@@ -776,29 +1051,32 @@
 					gitlabProjectName: selectedProject
 				})
 				var branchesUrl;
-
-				switch (selectedProject.toLowerCase()){
-					case "devcibp":
-						branchesUrl = "https://gitlab.evertecinc.com/api/v4/projects/492/repository/branches?" + this.state.token + "&per_page=100";
-						break;
-					case "qacibp":
-						branchesUrl = "https://gitlab.evertecinc.com/api/v4/projects/961/repository/branches?" + this.state.token + "&per_page=100";
-						break;	
-					case "pics":
-						branchesUrl = "https://gitlab.evertecinc.com/api/v4/projects/701/repository/branches?" + this.state.token + "&per_page=100";
-						break;
-					case "pays":
-						branchesUrl = "https://gitlab.evertecinc.com/api/v4/projects/743/repository/branches?" + this.state.token + "&per_page=100";
-						break;
-					case "ebts":
-						branchesUrl = "https://gitlab.evertecinc.com/api/v4/projects/604/repository/branches?" + this.state.token + "&per_page=100";
-						break;
-					case "pcas":
-						branchesUrl = "https://gitlab.evertecinc.com/api/v4/projects/750/repository/branches?" + this.state.token + "&per_page=100";
-						break;
-					default:
+				if (this.state.gitlabDynamicProjectID == 0){
+					switch (selectedProject.toLowerCase()){
+						case "devcibp":
+							branchesUrl = "https://gitlab.evertecinc.com/api/v4/projects/492/repository/branches?" + this.state.token + "&per_page=100";
+							break;
+						case "qacibp":
+							branchesUrl = "https://gitlab.evertecinc.com/api/v4/projects/961/repository/branches?" + this.state.token + "&per_page=100";
+							break;	
+						case "pics":
+							branchesUrl = "https://gitlab.evertecinc.com/api/v4/projects/701/repository/branches?" + this.state.token + "&per_page=100";
+							break;
+						case "pays":
+							branchesUrl = "https://gitlab.evertecinc.com/api/v4/projects/743/repository/branches?" + this.state.token + "&per_page=100";
+							break;
+						case "ebts":
+							branchesUrl = "https://gitlab.evertecinc.com/api/v4/projects/604/repository/branches?" + this.state.token + "&per_page=100";
+							break;
+						case "pcas":
+							branchesUrl = "https://gitlab.evertecinc.com/api/v4/projects/750/repository/branches?" + this.state.token + "&per_page=100";
+							break;
+						default:
+					}
 				}
-
+				else {
+					branchesUrl = "https://gitlab.evertecinc.com/api/v4/projects/"+ this.state.gitlabDynamicProjectID + "/repository/branches?" + this.state.token + "&per_page=100";
+				}
 // Make a request for a user with a given ID
 
 				/* set up async GET request 	*/
@@ -857,25 +1135,30 @@
 				})
 				var branchesUrl;
 
-				switch (selectedProject.toLowerCase()){
-					case "cibp":
-					branchesUrl = "https://gitlab.evertecinc.com/api/v4/projects/492/repository/branches?" + this.state.token + "&per_page=100";
-						break;
-					case "ebss":
-						branchesUrl = "https://gitlab.evertecinc.com/api/v4/projects/701/repository/branches?" + this.state.token + "&per_page=100";
-						break;
-					case "pays":
-						branchesUrl = "https://gitlab.evertecinc.com/api/v4/projects/743/repository/branches?" + this.state.token + "&per_page=100";
-						break;
-					case "ebts":
-						branchesUrl = "https://gitlab.evertecinc.com/api/v4/projects/604/repository/branches?" + this.state.token + "&per_page=100";
-						break;
-					case "pcas":
-						branchesUrl = "https://gitlab.evertecinc.com/api/v4/projects/750/repository/branches?" + this.state.token + "&per_page=100";
-						break;
-					default:
+				if (this.state.gitlabDynamicProjectID == 0){
+
+					switch (selectedProject.toLowerCase()){
+						case "cibp":
+						branchesUrl = "https://gitlab.evertecinc.com/api/v4/projects/492/repository/branches?" + this.state.token + "&per_page=100";
+							break;
+						case "ebss":
+							branchesUrl = "https://gitlab.evertecinc.com/api/v4/projects/701/repository/branches?" + this.state.token + "&per_page=100";
+							break;
+						case "pays":
+							branchesUrl = "https://gitlab.evertecinc.com/api/v4/projects/743/repository/branches?" + this.state.token + "&per_page=100";
+							break;
+						case "ebts":
+							branchesUrl = "https://gitlab.evertecinc.com/api/v4/projects/604/repository/branches?" + this.state.token + "&per_page=100";
+							break;
+						case "pcas":
+							branchesUrl = "https://gitlab.evertecinc.com/api/v4/projects/750/repository/branches?" + this.state.token + "&per_page=100";
+							break;
+						default:
+					}
 				}
-			
+				else {
+					branchesUrl = "https://gitlab.evertecinc.com/api/v4/projects/"+ gitlabDynamicProjectID + "/repository/branches?" + this.state.token + "&per_page=100";
+				}
 				
 				/* branches: 
 				[["CIBP", "EBSS", "PAYS", "EBTS", "PCAS"],[492, 701, 743, 604, 750]]
@@ -1436,11 +1719,12 @@
 						os: aOS
 					})
 				}
+				
 			}
 		}
 		
 		updateor(sSheetName, aSheetInfo){
-			console.log(sSheetName, aSheetInfo);
+			//console.log(sSheetName, aSheetInfo);
 			var sOSReadIfAndroid = sSheetName.toLowerCase().indexOf("android");
 			var sOSReadIfIos= sSheetName.toLowerCase().indexOf("ios");
 			var sOSName;
@@ -1535,8 +1819,8 @@
 
 		uploadORSheets(){
 			let currStateShowORImport = this.state.bShowORImport;
-			console.log("clicked");
-			console.log(currStateShowORImport);
+		//	console.log("clicked");
+		//	console.log(currStateShowORImport);
 			
 
 			this.setState({
@@ -1576,7 +1860,7 @@
 				actionNameVal: event.target.value
 			})
 
-			console.log(event.target.value);
+		//	console.log(event.target.value);
 
 		}
 		toggleSelector(){
@@ -1604,7 +1888,7 @@
 		}
 		getCallTo(e){
 			//e.preventDefault();
-			console.log("Hello Call To:");
+		//	console.log("Hello Call To:");
 		}
 		ShowCallToSteps(iRowNumber){
 			let oStepsTable = document.getElementById("toEx");
@@ -1655,7 +1939,7 @@
 				if (this.readyState == 4){
 					if (this.status == 200){
 						var workbook = XLSX.read(data, {type:"array"});
-						console.log(workbook);
+						//console.log(workbook);
 					
 						//workbook.SheetNames.forEach(function(sheet){
 							//var ul = document.getElementById("sheet-list");
@@ -1684,6 +1968,34 @@
 					add button to close window
 			*/
 		}
+
+		handleGlobalSearchCheckbox(e){
+		
+				let value = e.target.checked;
+
+				if (value) {
+
+					// if globalseach is desired, then initially clear array of elements from previous search or previous list of elements that belong to a page
+					this.setState({
+						globalSearchCheckbox: !this.state.globalSearchCheckbox,
+						pageDropdownVal: "select"
+						
+						//filteredElements: [],
+						//globalFilteredElements: []
+					})
+				}
+				else {
+					this.setState({
+						globalSearchCheckbox: !this.state.globalSearchCheckbox,
+						pageDropdownVal: "select",
+						filteredElements: [],
+						globalFilteredElements: []
+					})
+				}
+				//globalFilteredElements
+				
+		}
+
 		renderCallToTable(steps){
 			var oNewRow, oAction, oObject, oInput, oOutput, oComment, oDelete;
 			var arrayIndexCounter = 0;
@@ -1735,7 +2047,7 @@
 				oComment.innerText = sComment;
 
 			}
-			
+
 
 			
 			/*					
@@ -1782,10 +2094,12 @@
 			}
             return (
 				<div className="row">
+					<div id="snackbar">No elements were found...</div>
 					<Modal actionsss={this.state.actionsss}/>
 					<ShotCallToStepsModal />
 					<ImportScreenFF delCase={this.delCase} availableActions={this.state.actions} />
-                    <LoadOR uploadORSheets={this.uploadORSheets} bShowORImport={this.state.bShowORImport} updateor={this.updateor} />
+                    <LoadOR uploadORSheets={this.uploadORSheets} bShowORImport={this.state.bShowORImport} updateor={this.updateor}
+						stopSpinner={this.stopSpinner} />
 					<div className="row">
 						<div className="toolbarwrapper">
 							<div className="toolbarContainer">
@@ -1823,7 +2137,8 @@
 								</div>
 								<div className="searchFilter">
 									<h3 style={{display: 'inline-block'}}>Filter</h3><i> by text or name</i>
-									<div><input style={{marginLeft: '5px'}} type="text" value={this.state.searchFilterValue} onChange={this.handleFilterChange}/></div>
+									<div><input style={{marginLeft: '5px'}} type="text" value={this.state.searchFilterValue} onChange={this.changeInputSearchValue} /><input className="menu-button" value="Search" type="button" onClick={this.handleFilterChange}/></div>
+									<input type="checkbox" name="globalFilter" checked={this.state.globalSearchCheckbox} onChange={this.handleGlobalSearchCheckbox} /><span>Global Filter</span>
 									
 								</div>
 								<div className="toolbarExport" style={{marginTop: '22px'}}>
@@ -1854,7 +2169,11 @@
 						
 							<div className="tablesContainer">
 								<div className="elementsTable">
-									<Elements xmlReadDone={this.state.xmlReadDone} tableChilds={this.state.filteredElements} addCase={this.addCase}/>
+									<Elements xmlReadDone={this.state.xmlReadDone} tableChilds={this.state.filteredElements} globalFilteredElements={this.state.globalFilteredElements} addCase={this.addCase}
+										oWebScreenNObjects={this.state.oWebScreenNObjects} oAndroidScreenNObjects={this.state.oAndroidScreenNObjects} oIosScreenNObjects={this.state.oIosScreenNObjects}
+										oOtherMobileScreenNObjects={this.state.oOtherMobileScreenNObjects} OSName={this.state.osDropdownVal} pageName={this.state.pageDropdownVal}
+										globalSearchCheckbox={this.state.globalSearchCheckbox}
+									/>
 								</div>
 								<div className="ffTable">
 									<CaseTable ShowCallToSteps={this.ShowCallToSteps} callToFeatures={this.state.callToFeatures} shouldUpdate={this.state.shouldCaseTableUpdate} delCase={this.delCase} testSteps={this.state.cases} actionNameVal={this.state.actionNameVal} actionChange={this.actionChange} actions={this.state.actions} />
@@ -1888,7 +2207,7 @@
 	}
 	class ManualORModule extends React.Component {
 		render(){
-			console.log(this.props.renderSourceOption);
+			//console.log(this.props.renderSourceOption);
 			if (this.props.renderSourceOption.toLowerCase() == "manual"){
 				return (
 					<div className="upload-sheets">
@@ -1922,6 +2241,7 @@
 			}
 		}
 	}
+	
 	class GitlabProjectName extends React.Component {
 		render(){
 			return (	
@@ -1959,7 +2279,7 @@
             var ORStruct = {};
             var aStepsToAppend;
             var result;
-            console.log(this.props.test);
+            //console.log(this.props.test);
             for (let f = 0; f <= files.length - 1; f++){
                
 				var file = files[f];
@@ -1968,7 +2288,8 @@
             
             }
 			//console.log("as;ldkfj;asldkfj;alksdfj;alksdjf;alksdjf;laksdjf;klasjd;flkj");
-			document.getElementsByClassName("upload-done-message")[1].style.display = "block"
+			document.getElementsByClassName("upload-done-message")[1].style.display = "block";
+			this.props.stopSpinner();
 			//console.log("display= " + document.querySelector(".upload-done-message").style.display);
         }
 
@@ -2003,7 +2324,7 @@
 						_this.props.updateor(sFilename, XL_row_object);
                     });
 
-					console.log("done");
+					//console.log("done");
                 };
 				
                 reader.readAsBinaryString(file);
@@ -2088,7 +2409,7 @@
                 
                 this.getSheetsName(file);
             }
-			console.log("as;lkfajs;dlfja;lsdkfj;alskdfj;alskdjf;alskdjf;laksdjf;lakjsdf;lk");
+			
 			document.querySelector(".upload-done-message").style.display = "block";
             // var file = files[0];
             //e.target.value = '';
@@ -2192,8 +2513,8 @@
 				   oDelete.innerHTML = '<div class="close"> &times;</div>';
 				   oDelete.onclick = function(obj){
 					
-						console.log(obj.target.parentNode.parentNode.parentNode.parentNode);
-						console.log(obj.target.parentNode.parentNode.rowIndex);
+						//console.log(obj.target.parentNode.parentNode.parentNode.parentNode);
+						//console.log(obj.target.parentNode.parentNode.rowIndex);
 						
 
 						let iClickedRow = obj.target.parentNode.parentNode.rowIndex;					
@@ -2207,7 +2528,7 @@
                 }
 
                 //if (r = iFinalRowsCount){
-					console.log("-------------------------------------asdfasdfasdf")
+					
                     document.querySelector(".upload-done-message").style.display = "block";
                 //}
 			}
@@ -2262,6 +2583,7 @@
             //console.log(this.props.tableChilds);
 			let oAllElements = this.props.tableChilds;
 			let iNumOfElem = this.props.tableChilds.length;
+			let globalFilteredElements = this.props.globalFilteredElements;
 			let oElement;
 			let oElementsToDisplay = [];
 			let oFrameChildObjects;
@@ -2270,35 +2592,81 @@
 			let sNameToAddCase;
 			var iGlobalKeyCounter = 0;
 			var aElementsInnerText=[];
+			var globalSearch = this.props.globalSearchCheckbox;
+			let OS_Name = this.props.OSName;
+			let globalObjectsPerOS;
 
-			for (let el=0; el < iNumOfElem; el++){
-				
+			//console.log("<Elements globalFilteredElements LENGTH: ", globalFilteredElements.length);
 
-				iGlobalKeyCounter+=1
+			if (globalSearch){
 
-				
-					//else {<td><div className="addCase" onClick={() => this.addCase(oAllElements[el])}>Add</div></td>
-					if (oAllElements[el]["Value"] == null){
+				switch (OS_Name.toLowerCase()){
+
+					case "web":
+						globalObjectsPerOS = this.props.oWebScreenNObjects;
+						break;
+					case "ios":
+						globalObjectsPerOS = this.props.oIosScreenNObjects;
+						break;
+					case "android":
+						globalObjectsPerOS = this.props.oAndroidScreenNObjects;
+						break;
+					case "other mobile pages":
+						globalObjectsPerOS = this.props.oOtherMobileScreenNObjects;
+						break;
+				}
+
+				let iPagesFound = globalFilteredElements.length;
+
+				for (let p = 0; p < iPagesFound; p++){
+					
+					oElementsToDisplay.push(
+						<tr className="global-filter-page" key={iGlobalKeyCounter}><td>{globalFilteredElements[p].screenName}</td></tr>
+					)
+					
+					for (let o = 0; o < globalFilteredElements[p].objects.length; o++){
 						oElementsToDisplay.push(
-							<tr key={iGlobalKeyCounter}>
-								<td className="element-name-width">{oAllElements[el]["Object Name"]}<div className="toggable-selector-name"><hr />{oAllElements[el]["Selector Value"]}</div></td>
-								<td><div className="addCase" onClick={() => this.addCase(oAllElements[el])}>Add</div></td>
+							<tr key={iGlobalKeyCounter+1 + `${p}` + `${o}`}>
+								<td className="element-name-width">{globalFilteredElements[p].objects[o]["Object Name"]}<div className="toggable-selector-name"><hr />{globalFilteredElements[p].objects[o]["Selector Value"]}</div></td>
+								<td><div className="addCase" onClick={() => this.addCase(globalFilteredElements[p].objects[o], globalFilteredElements[p].screenName)}>Add</div></td>
 							</tr>
-						);	
+						);
 					}
-					else {
-						oElementsToDisplay.push(
-							<tr key={iGlobalKeyCounter}>
-								<td className="element-name-width">{oAllElements[el]["Object Name"]}<hr />{oAllElements[el]["Value"]}<p></p><div className="toggable-selector-name">{oAllElements[el]["Selector Value"]}</div></td>
-								<td><div className="addCase" onClick={() => this.addCase(oAllElements[el])}>Add</div></td>
-							</tr>
-						);	
-					}
-						
-				//	}
-				//}
+					
+					iGlobalKeyCounter+=2;	
+				}
 			}
+			else {
 
+				
+				for (let el=0; el < iNumOfElem; el++){
+					
+
+					iGlobalKeyCounter+=1
+
+					
+						//else {<td><div className="addCase" onClick={() => this.addCase(oAllElements[el])}>Add</div></td>
+						if (oAllElements[el]["Value"] == null){
+							oElementsToDisplay.push(
+								<tr key={iGlobalKeyCounter}>
+									<td className="element-name-width">{oAllElements[el]["Object Name"]}<div className="toggable-selector-name"><hr />{oAllElements[el]["Selector Value"]}</div></td>
+									<td><div className="addCase" onClick={() => this.addCase(oAllElements[el])}>Add</div></td>
+								</tr>
+							);	
+						}
+						else {
+							oElementsToDisplay.push(
+								<tr key={iGlobalKeyCounter}>
+									<td className="element-name-width">{oAllElements[el]["Object Name"]}<hr />{oAllElements[el]["Value"]}<p></p><div className="toggable-selector-name">{oAllElements[el]["Selector Value"]}</div></td>
+									<td><div className="addCase" onClick={() => this.addCase(oAllElements[el])}>Add</div></td>
+								</tr>
+							);	
+						}
+							
+					//	}
+					//}
+				}
+			}
             return (
                 <table id="elements-table" className="tblCSS">
                     <thead>
@@ -2630,7 +2998,7 @@
 			let objectProps = this.props.object;
 			let newValue = this.props.actionNameVal;
 
-			console.log("TR component called");//defaultValue={objectProps.text}
+			//console.log("TR component called");//defaultValue={objectProps.text}
 			if (objectProps.text == "placeholder-step"){
 				return (
 					<tr>
@@ -2744,7 +3112,7 @@
 </tr>
 */
         render(){
-			console.log("Case component called");
+			//console.log("Case component called");
 			//this.delCase = this.props.delCase; 
             //console.log(this.props.tableChilds);
 			//let sortedActions = this.props.actions.sort();
