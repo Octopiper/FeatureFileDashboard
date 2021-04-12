@@ -661,7 +661,7 @@
 				//console.log("arrayIndex", arrayIndex);
 				//console.log("browserPages[arrayIndex]", this.state.browserPages[arrayIndex]);
 				this.setState({
-					showSpinner: true,
+					//showSpinner: true,
 					osDropdownVal: sSelectedOS,//event.target.value,
 					pagesDropdown: aPagesDropdown,//this.state.browserPages[arrayIndex],
 					filteredElements: [],
@@ -698,6 +698,9 @@
 
 
 			if (this.state.sourceOption.toLowerCase() == "gitlab"){
+				this.setState({
+					showSpinner: true
+				})
 				
 				for (let p = 0; p < aPagesDropdown.length; p++){
 					this.fetchGitlabPageObjects(aPagesDropdown[p], sSelectedOS);
