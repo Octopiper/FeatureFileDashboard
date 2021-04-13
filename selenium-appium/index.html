@@ -476,7 +476,7 @@
 
 			let aElementsToFilter;
 
-			let OS_Name = this.state.osDropdownVal;
+			let OS_Name = this.state.osDropdownVal.toLowerCase();
 
 			if (globalFilter && sSearchText != ""){ //this.state.globalFilter
 				this.setState({
@@ -520,7 +520,7 @@
 					console.log("repo: ", repo);
 					var objectsPerPage = globalObjectsPerOS[repo].objects.filter((obj, key) =>
 						{
-							console.log("key: ", key, "obj: ", obj);
+							//console.log("key: ", key, "obj: ", obj);
 							let sSelectorValue = obj["Selector Value"];
 							if (typeof(sSelectorValue) == "number"){
 								sSelectorValue = `${sSelectorValue}`;
@@ -701,7 +701,7 @@
 				this.setState({
 					showSpinner: true
 				})
-				
+
 				for (let p = 0; p < aPagesDropdown.length; p++){
 					this.fetchGitlabPageObjects(aPagesDropdown[p], sSelectedOS);
 
@@ -900,7 +900,10 @@
 				oIosScreenNObjects: [],
 				aIosScreens: [],
 				oWebScreenNObjects: [],
-				aWebScreens: []
+				aWebScreens: [],
+				globalFilteredElements: [],
+				globalSearchCheckbox: false,
+				searchFilterValue: ""
 				// should I also clear "elements" to []???
 			})
 		}
@@ -1981,7 +1984,8 @@
 					// if globalseach is desired, then initially clear array of elements from previous search or previous list of elements that belong to a page
 					this.setState({
 						globalSearchCheckbox: !this.state.globalSearchCheckbox,
-						pageDropdownVal: "select"
+						pageDropdownVal: "select",
+						globalFilteredElements: []
 						
 						//filteredElements: [],
 						//globalFilteredElements: []
@@ -2346,7 +2350,7 @@
 					<div className="import-container-or">
 						<span onClick={this.props.uploadORSheets} className="import-close">×</span>
 						<div className="droppable">
-							<h3 onClick={this.showFileWindow} className="choose-file" id="showfileselection" >Click to choose a file</h3>
+							<h3 onClick={this.showFileWindow} className="choose-file" id="showfileselection" >Click to choose file(s)</h3>
 							<b className="inline-element upload-done-message">Document uploaded successfully!</b>
 						</div>
 						<input className="input-xls-select" id="input-xls-select" onChange={this.handleFileChange} multiple type = "file" />
