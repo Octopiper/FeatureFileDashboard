@@ -99,7 +99,9 @@
 							globalFilter: false,
 							globalSearchCheckbox: false,
 							iORProgressCount: 0,
-							aPagesDropdownCount: 0
+							aPagesDropdownCount: 0,
+							aFailedObjects: [],
+							allObjectsInProject: 0
 							//repoID: 
                         };
             //this.constructWebElementHTML = this.constructWebElementHTML.bind(this);    
@@ -136,6 +138,7 @@
 			this.handleGlobalSearchCheckbox = this.handleGlobalSearchCheckbox.bind(this);
 			this.changeInputSearchValue = this.changeInputSearchValue.bind(this);
 			this.stopSpinner = this.stopSpinner.bind(this);
+			this.orHealthyCheck = this.orHealthyCheck.bind(this);
 			//this.handleByTextFilter = this.handleByTextFilter.bind(this);
 			//this.handleByElementTypeChange = this.handleByElementTypeChange.bind(this);
         }
@@ -180,8 +183,8 @@
 				var error = false;
 				var response; 
 				xhttp.onreadystatechange = function() {
-					if (this.readyState == 4){
-						if(this.status == 200) {
+					if (this.readyState == 4 && this.status == 200){
+						//if() {
 						
 							
 							var response = JSON.parse(this.responseText);
@@ -199,15 +202,16 @@
 							})
 							//_this.processFeaturesResponse(response, url);
 							
-						}
-						else {
-							//console.log(this.status);
-							error = true;
-						}
 					}
 					else {
+							//console.log(this.status);
+						error = true;
 						console.log("error in repoURL: " + repoURL);
 					}
+					//}
+					//else {
+						
+					//}
 					
 				};
 				xhttp.open("GET", repoURL, true);
@@ -278,36 +282,12 @@
 			document.querySelector(".import-container").style.display = "block";
 		}
 		
-		updateORi(){
-			this.setState({
-				showSpinner: true
-			});
-
-			var _this = this; // object pertaining to the <App /> component itself.
-			let sInputURL = window.location.href;
-			
-			let aURLParameters = sInputURL.split("?app=");
-
-			if (aURLParameters.length != 2){
-				alert("Error: URL provided is incorrect. Please contact the developer for assitance.");
-			}
-			else{
-				let url;
-				let sApp = aURLParameters[1];
-
-                url = "algo";
-				
-                // set the state variables with the JSON contents
-                _this.setState({
-                    OR: xmljson[0], // 'pages' contains an array of the Pages
-                    browserNames: xmljson[1], // 'pageNChilds' contains a JSON of each Page child elements(ie: WebElements, WebButtons etc.)
-                    browserPages: xmljson[2],
-                    showSpinner: false,
-                    xmlReadDone: true
-                });				  
-			}
-		}
+		
 /////=================
+		/* Delete Step from Feature File
+
+		INPUT: HTML row object
+		*/
 		delCase = obj => {
 			
 			//console.log("cases:", this.state.cases);
@@ -518,6 +498,20 @@
 					
 					found = false;
 					console.log("repo: ", repo);
+					if (repo == 16){
+						console.log("Here");
+					}
+					if (repo == 29){
+						console.log("Here");
+					}
+
+					var hasObjects = Object.keys(globalObjectsPerOS[repo]).indexOf("objects");
+					if (hasObjects == -1){
+						console.log("error");
+					}
+					else{
+
+					
 					var objectsPerPage = globalObjectsPerOS[repo].objects.filter((obj, key) =>
 						{
 							//console.log("key: ", key, "obj: ", obj);
@@ -535,7 +529,7 @@
 								}
 							}
 						});
-					
+					}
 					if (found){
 						objectsStruct.screenName = globalObjectsPerOS[repo].screenName;
 						objectsStruct.objects = objectsPerPage;
@@ -573,10 +567,11 @@
 			
 				var aByNameOrText = aElementsToFilter.filter((obj) => // replace elements by filteredElements
 					{
+						console.log(obj);
 						if (obj["Value"] != null){
-							if ((obj["Value"].toLowerCase().indexOf(sSearchText.toLowerCase()) >= 0) 
+							if ((obj["Value"].toString().toLowerCase().indexOf(sSearchText.toLowerCase()) >= 0) 
 								|| (obj["Object Name"].toLowerCase().indexOf(sSearchText.toLowerCase()) >= 0)
-								|| (obj["Selector Value"].toLowerCase().indexOf(sSearchText.toLowerCase()) >= 0)){
+								|| (obj["Selector Value"].toString().toLowerCase().indexOf(sSearchText.toLowerCase()) >= 0)){
 									bWholeSeachFoundFlag = true;
 									return true; //obj["Value"].toLowerCase().indexOf(sSearchText.toLowerCase())
 							}
@@ -590,7 +585,7 @@
 						}
 						else {
 							if ((obj["Object Name"].toLowerCase().indexOf(sSearchText.toLowerCase()) >= 0)
-								|| (obj["Selector Value"].toLowerCase().indexOf(sSearchText.toLowerCase()) >= 0)){
+								|| (obj["Selector Value"].toString().toLowerCase().indexOf(sSearchText.toLowerCase()) >= 0)){
 									bWholeSeachFoundFlag = true;
 									return true; //(obj["Object Name"].toLowerCase().indexOf(sSearchText.toLowerCase())  >= 0 );
 							}
@@ -773,7 +768,10 @@
 									showSpinner: false,
 									iORProgressCount: 0
 								})
-
+								alert("Done");
+								console.log("Failed objects: ", _this.state.aFailedObjects);
+								console.log("all objects in project: ", _this.state.allObjectsInProject);
+								
 								//alert("completed: " + _this.state.aPagesDropdownCount + "/" + _this.state.iORProgressCount);
 							}
 
@@ -1277,9 +1275,76 @@
 			})
 		}
 
-		
+		orHealthyCheck(sSheetName, aORInfo){
+			let orObjectsCount = aORInfo.length
+			let aFailedObjects = [];
+			let struct = {};
+
+			let aRepositoryKeys;
+			let object;
+			let hasIssues = false;
+
+
+			//ObjectName = oAllElements[el][aRepositoryKeys[0]];
+			let sSelectorValue;
+		//	aFailedObjects = this.state.aFailedObjects;
+			this.setState({
+				allObjectsInProject: this.state.allObjectsInProject + orObjectsCount
+			})
+
+			for (let a = 0; a < orObjectsCount; a++){
+				object = aORInfo[a];
+				
+				aRepositoryKeys = Object.keys(object);
+
+				//console.log("aRepositoryKeys", aRepositoryKeys);
+
+				
+
+				if (this.state.iORProgressCount == 82){
+				//	console.log("count: ", a);
+				//	console.log("here");
+				}
+				sSelectorValue = object[aRepositoryKeys[2]];
+
+				if (typeof(sSelectorValue) != "string"){
+					hasIssues = true;
+					struct.sheetname = sSheetName;
+					struct.keys = Object.keys(object).toString();
+
+					aFailedObjects.push(struct);
+					struct = {};
+					
+					console.log("a: " + a + "object: " + object[aRepositoryKeys[0]]);
+					//console.log("Object Name wrong: ", aRepositoryKeys[0])
+				}
+				else {
+					if (sSelectorValue.indexOf("/html/body") != -1){
+						hasIssues = true;
+						struct.sheetname = sSheetName;
+						struct.objectname = object[aRepositoryKeys[0]];
+						struct.selectorvalue = sSelectorValue;
+						aFailedObjects.push(struct);
+						struct = {};
+					}
+				}
+				
+			}
+
+			if (hasIssues){
+				let storedFailedObjects = this.state.aFailedObjects;
+				let newConcat = storedFailedObjects.concat(aFailedObjects);
+			
+				this.setState({
+					aFailedObjects: newConcat
+				});
+			}
+			
+		}
 
 		updateORObjectsInfo(sSheetName, aORInfo){
+
+			this.orHealthyCheck(sSheetName, aORInfo);
 
 			var sOSReadIfAndroid = sSheetName.toLowerCase().indexOf("android");
 			var sOSReadIfIos= sSheetName.toLowerCase().indexOf("ios");
@@ -2624,17 +2689,32 @@
 				}
 
 				let iPagesFound = globalFilteredElements.length;
+				
+				let aRepositoryKeys;
+				let ObjectName, SelectorType, SelectorValue;
 
 				for (let p = 0; p < iPagesFound; p++){
+					for (let o = 0; o < globalFilteredElements[p].objects.length; o++){
+					aRepositoryKeys = Object.keys(globalFilteredElements[p].objects[o]);
 					
-					oElementsToDisplay.push(
-						<tr className="global-filter-page" key={iGlobalKeyCounter}><td>{globalFilteredElements[p].screenName}</td></tr>
+					ObjectName = globalFilteredElements[p].objects[o][aRepositoryKeys[0]];
+					//SelectorType = globalFilteredElements[p].objects[o][aRepositoryKeys[1]];
+					SelectorValue = globalFilteredElements[p].objects[o][aRepositoryKeys[2]];
+
+					/*
+						Object Name: index #1
+						Selector Type: index #2
+						Selector Value: index #3
+					*/
+
+					oElementsToDisplay.push( //iGlobalKeyCounter
+						<tr className="global-filter-page" key={globalFilteredElements[p].screenName + iGlobalKeyCounter + p + o}><td>{globalFilteredElements[p].screenName}</td></tr>
 					)
 					
-					for (let o = 0; o < globalFilteredElements[p].objects.length; o++){
+					// iGlobalKeyCounter+ 1 + `${p}` + `${o}`
 						oElementsToDisplay.push(
-							<tr key={iGlobalKeyCounter+1 + `${p}` + `${o}`}>
-								<td className="element-name-width">{globalFilteredElements[p].objects[o]["Object Name"]}<div className="toggable-selector-name"><hr />{globalFilteredElements[p].objects[o]["Selector Value"]}</div></td>
+							<tr key={p + o + iGlobalKeyCounter + ObjectName}>
+								<td className="element-name-width">{ObjectName}<div className="toggable-selector-name"><hr />{SelectorValue}</div></td>
 								<td><div className="addCase" onClick={() => this.addCase(globalFilteredElements[p].objects[o], globalFilteredElements[p].screenName)}>Add</div></td>
 							</tr>
 						);
@@ -2646,8 +2726,22 @@
 			else {
 
 				
+				let aRepositoryKeys;
+				let ObjectName, SelectorType, SelectorValue;
+
+				/*
+					Object Name: index #0
+					Selector Type: index #1
+					Selector Value: index #2
+				*/
+
 				for (let el=0; el < iNumOfElem; el++){
 					
+					aRepositoryKeys = Object.keys(oAllElements[el]);
+					
+					ObjectName = oAllElements[el][aRepositoryKeys[0]];
+					//SelectorType = globalFilteredElements[p].objects[o][aRepositoryKeys[1]];
+					SelectorValue = oAllElements[el][aRepositoryKeys[2]];
 
 					iGlobalKeyCounter+=1
 
@@ -2656,7 +2750,7 @@
 						if (oAllElements[el]["Value"] == null){
 							oElementsToDisplay.push(
 								<tr key={iGlobalKeyCounter}>
-									<td className="element-name-width">{oAllElements[el]["Object Name"]}<div className="toggable-selector-name"><hr />{oAllElements[el]["Selector Value"]}</div></td>
+									<td className="element-name-width">{ObjectName}<div className="toggable-selector-name"><hr />{SelectorValue}</div></td>
 									<td><div className="addCase" onClick={() => this.addCase(oAllElements[el])}>Add</div></td>
 								</tr>
 							);	
@@ -2664,7 +2758,7 @@
 						else {
 							oElementsToDisplay.push(
 								<tr key={iGlobalKeyCounter}>
-									<td className="element-name-width">{oAllElements[el]["Object Name"]}<hr />{oAllElements[el]["Value"]}<p></p><div className="toggable-selector-name">{oAllElements[el]["Selector Value"]}</div></td>
+									<td className="element-name-width">{ObjectName}<hr />{oAllElements[el]["Value"]}<p></p><div className="toggable-selector-name">{SelectorValue}</div></td>
 									<td><div className="addCase" onClick={() => this.addCase(oAllElements[el])}>Add</div></td>
 								</tr>
 							);	
