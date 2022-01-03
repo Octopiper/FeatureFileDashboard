@@ -16,9 +16,9 @@
 	<link rel="icon" type="image/png" href="/faviconn.png" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
  	<style>
+		 
 
-
-</style>
+	</style>
     <meta charset="UTF-8" />
     <title>OR Dashboard</title>
 
@@ -36,11 +36,14 @@
 	<script src="js/xlsx.full.min.js"></script>
 
 	<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-
+	
   </head>
     <body>
-		
+	
     <div id="root"></div>
+
+	
+
     <script type="text/babel">
     
     class App extends React.Component {
@@ -91,9 +94,9 @@
 							aGitlabIosScreens: [],
 							bShowORImport: false,
 							renderGitlabOptions: false,
-							sourceOption: "select",
-							sourcesOptions: ["Gitlab", "Manual OR upload"],
-							renderSourceOption: "none",
+							sourceOption: "Manual OR upload",
+							sourcesOptions: ["Manual OR upload"],
+							renderSourceOption: "manual",
 							token: "private_token=y-cu6cTeV4QM_zquJpte",
 							callToFeatures: [],
 							globalFilter: false,
@@ -458,7 +461,7 @@
 
 			let OS_Name = this.state.osDropdownVal.toLowerCase();
 
-			if (globalFilter && sSearchText != ""){ //this.state.globalFilter
+			if (globalFilter && sSearchText != ""){  /* GLOBAL FILTER */ 
 				this.setState({
 					showSpinner: true
 				})
@@ -514,18 +517,20 @@
 					
 					var objectsPerPage = globalObjectsPerOS[repo].objects.filter((obj, key) =>
 						{
-							//console.log("key: ", key, "obj: ", obj);
-							let sSelectorValue = obj["Selector Value"];
-							if (typeof(sSelectorValue) == "number"){
-								sSelectorValue = `${sSelectorValue}`;
+							
+							if (Object.keys(obj).length >= 3){
+								let sSelectorValue = obj["Selector Value"];
+								if (typeof(sSelectorValue) == "number"){
+									sSelectorValue = `${sSelectorValue}`;
 
-							}
-							if (obj["Object Name"] != undefined && obj["Selector Value"] != undefined){
-								if ((obj["Object Name"].toLowerCase().indexOf(sSearchText.toLowerCase()) >= 0)
-									|| (sSelectorValue.toLowerCase().indexOf(sSearchText.toLowerCase()) >= 0)){ // colocar validación de isNan
-										found = true;
-										bWholeSeachFoundFlag = true;
-										return true;
+								}
+								if (obj["Object Name"] != undefined && obj["Selector Value"] != undefined){
+									if ((obj["Object Name"].toLowerCase().indexOf(sSearchText.toLowerCase()) >= 0)
+										|| (sSelectorValue.toLowerCase().indexOf(sSearchText.toLowerCase()) >= 0)){ // colocar validación de isNan
+											found = true;
+											bWholeSeachFoundFlag = true;
+											return true;
+									}
 								}
 							}
 						});
@@ -559,40 +564,43 @@
 					showSpinner: false
 				});
 			}
-			else if((this.state.pageDropdownVal != "select") && (globalFilter == false)) {
+			else if((this.state.pageDropdownVal != "select") && (globalFilter == false)) { /* LOCAL FILTER */
 				this.setState({
 					showSpinner: true
 				})
 				aElementsToFilter = this.state.elements;
-			
+				
+
 				var aByNameOrText = aElementsToFilter.filter((obj) => // replace elements by filteredElements
 					{
-						console.log(obj);
-						if (obj["Value"] != null){
-							if ((obj["Value"].toString().toLowerCase().indexOf(sSearchText.toLowerCase()) >= 0) 
-								|| (obj["Object Name"].toLowerCase().indexOf(sSearchText.toLowerCase()) >= 0)
-								|| (obj["Selector Value"].toString().toLowerCase().indexOf(sSearchText.toLowerCase()) >= 0)){
-									bWholeSeachFoundFlag = true;
-									return true; //obj["Value"].toLowerCase().indexOf(sSearchText.toLowerCase())
-							}
-							/*else if (obj["Object Name"].toLowerCase().indexOf(sSearchText.toLowerCase()) >= 0){
-								return true; //(obj["Object Name"].toLowerCase().indexOf(sSearchText.toLowerCase())  >= 0 );
-							}
-							else if (obj["Selector Value"].toLowerCase().indexOf(sSearchText.toLowerCase()) >= 0){
-								return true; //(obj["Selector Value"].toLowerCase().indexOf(sSearchText.toLowerCase())  >= 0 );
-							}*/
-							//	return (obj["Selector Value"].toLowerCase().indexOf(sSearchText.toLowerCase()) >= 0);
-						}
-						else {
-							if ((obj["Object Name"].toLowerCase().indexOf(sSearchText.toLowerCase()) >= 0)
-								|| (obj["Selector Value"].toString().toLowerCase().indexOf(sSearchText.toLowerCase()) >= 0)){
-									bWholeSeachFoundFlag = true;
+						if (Object.keys(obj).length >= 3){
+							if (obj["Value"] != null){
+								if ((obj["Value"].toString().toLowerCase().indexOf(sSearchText.toLowerCase()) >= 0) 
+									|| (obj["Object Name"].toLowerCase().indexOf(sSearchText.toLowerCase()) >= 0)
+									|| (obj["Selector Value"].toString().toLowerCase().indexOf(sSearchText.toLowerCase()) >= 0)){
+										bWholeSeachFoundFlag = true;
+										return true; //obj["Value"].toLowerCase().indexOf(sSearchText.toLowerCase())
+								}
+								/*else if (obj["Object Name"].toLowerCase().indexOf(sSearchText.toLowerCase()) >= 0){
 									return true; //(obj["Object Name"].toLowerCase().indexOf(sSearchText.toLowerCase())  >= 0 );
+								}
+								else if (obj["Selector Value"].toLowerCase().indexOf(sSearchText.toLowerCase()) >= 0){
+									return true; //(obj["Selector Value"].toLowerCase().indexOf(sSearchText.toLowerCase())  >= 0 );
+								}*/
+								//	return (obj["Selector Value"].toLowerCase().indexOf(sSearchText.toLowerCase()) >= 0);
 							}
-							/*else if (obj["Selector Value"].toLowerCase().indexOf(sSearchText.toLowerCase()) >= 0){
-								return true; //(obj["Selector Value"].toLowerCase().indexOf(sSearchText.toLowerCase())  >= 0 );
-							}*/
-							
+							else {
+								console.log(obj);
+								if ((obj["Object Name"].toLowerCase().indexOf(sSearchText.toLowerCase()) >= 0)
+									|| (obj["Selector Value"].toString().toLowerCase().indexOf(sSearchText.toLowerCase()) >= 0)){
+										bWholeSeachFoundFlag = true;
+										return true; //(obj["Object Name"].toLowerCase().indexOf(sSearchText.toLowerCase())  >= 0 );
+								}
+								/*else if (obj["Selector Value"].toLowerCase().indexOf(sSearchText.toLowerCase()) >= 0){
+									return true; //(obj["Selector Value"].toLowerCase().indexOf(sSearchText.toLowerCase())  >= 0 );
+								}*/
+								
+							}
 						}
 					}
 				);
@@ -1794,10 +1802,17 @@
 			}
 		}
 		
-		updateor(sSheetName, aSheetInfo){
+		updateor(sSheetName, aSheetInfo, os){
 			//console.log(sSheetName, aSheetInfo);
-			var sOSReadIfAndroid = sSheetName.toLowerCase().indexOf("android");
-			var sOSReadIfIos= sSheetName.toLowerCase().indexOf("ios");
+			var sOSReadIfAndroid = -1;
+			var sOSReadIfIos = -1;
+
+			if (os == "mobile") {
+				sOSReadIfAndroid = sSheetName.toLowerCase().indexOf("android");
+				sOSReadIfIos = sSheetName.toLowerCase().indexOf("ios");
+			}
+	
+			
 			var sOSName;
 
 			var oSheetsStruct = {};
@@ -2341,12 +2356,16 @@
         constructor(props){
             super(props);
         
-            this.handleFileChange = this.handleFileChange.bind(this);
+            this.handleORFileChange = this.handleORFileChange.bind(this);
             this.getSheetsName = this.getSheetsName.bind(this);
 			this.showFileWindow = this.showFileWindow.bind(this);
 
         }
-        handleFileChange (e) {
+		componentDidMount(){
+
+		}
+        handleORFileChange (e) {
+		
             var files = e.target.files;
             var ORStruct = {};
             var aStepsToAppend;
@@ -2355,9 +2374,21 @@
             for (let f = 0; f <= files.length - 1; f++){
                
 				var file = files[f];
-					
-				this.getSheetsName(file)
-            
+				var filePath = files[f].webkitRelativePath;
+				var OSWEBType = filePath.indexOf('web/') >= 0 ? "web" : false;
+				var OSMOBILEType = filePath.indexOf('mobile/') >= 0 ? "mobile" : false;
+				var osName = "web";
+
+				if (OSWEBType) {
+					osName = OSWEBType;
+				}
+				else if (OSMOBILEType) {
+					osName = OSMOBILEType;
+				}
+
+				if (filePath.indexOf('objectrepository/') >= 0) {
+					this.getSheetsName(file, osName);
+				}
             }
 			//console.log("as;ldkfj;asldkfj;alksdfj;alksdjf;alksdjf;laksdjf;klasjd;flkj");
 			document.getElementsByClassName("upload-done-message")[1].style.display = "block";
@@ -2366,10 +2397,11 @@
         }
 
      
-        getSheetsName(file){
+        getSheetsName(file, os){
             var reader = new FileReader();
 			var _thisAppScope = this;
             var sFilename = file.name.split(".")[0];
+			var sFilenameExtension = file.name.split(".")[1];
             var sOSName;
             var aStepsToAppend;
 
@@ -2393,7 +2425,7 @@
 						XLSX.utils.book_append_sheet(wbook, ws, 'sheet1');
 						XLSX.writeFile(wbook, "joelitogarcia.xls");*/
 
-						_this.props.updateor(sFilename, XL_row_object);
+						_this.props.updateor(sFilename, XL_row_object, os);
                     });
 
 					//console.log("done");
@@ -2405,6 +2437,7 @@
 		showFileWindow(){
 			document.querySelector("#input-xls-select").click();
 		}
+		
 		//closeImportScreen(){
 			//document.querySelector("#import-container").style.display = "none";
 			
@@ -2415,10 +2448,11 @@
 					<div className="import-container-or">
 						<span onClick={this.props.uploadORSheets} className="import-close">×</span>
 						<div className="droppable">
-							<h3 onClick={this.showFileWindow} className="choose-file" id="showfileselection" >Click to choose file(s)</h3>
+							<h3 onClick={this.showFileWindow} className="choose-file" id="showfileselection" >Click to choose OR file(s)</h3>
 							<b className="inline-element upload-done-message">Document uploaded successfully!</b>
 						</div>
-						<input className="input-xls-select" id="input-xls-select" onChange={this.handleFileChange} multiple type = "file" />
+						<input className="iinput-xls-select" id="input-xls-select"  multiple type = "file" webkitdirectory="" onChange={this.handleORFileChange} />
+						
 					</div>
 				);
 			}
@@ -2427,6 +2461,8 @@
 			}
         }
     }
+
+
 	class ImportScreenFF extends React.Component{
 		//<CaseTable delCase={this.delCase} tableChilds={this.state.cases} actions={this.state.actions} />
 		constructor(props){
@@ -2694,28 +2730,31 @@
 				let ObjectName, SelectorType, SelectorValue;
 
 				for (let p = 0; p < iPagesFound; p++){
-					for (let o = 0; o < globalFilteredElements[p].objects.length; o++){
-					aRepositoryKeys = Object.keys(globalFilteredElements[p].objects[o]);
 					
-					ObjectName = globalFilteredElements[p].objects[o][aRepositoryKeys[0]];
-					//SelectorType = globalFilteredElements[p].objects[o][aRepositoryKeys[1]];
-					SelectorValue = globalFilteredElements[p].objects[o][aRepositoryKeys[2]];
-
-					/*
-						Object Name: index #1
-						Selector Type: index #2
-						Selector Value: index #3
-					*/
-
 					oElementsToDisplay.push( //iGlobalKeyCounter
-						<tr className="global-filter-page" key={globalFilteredElements[p].screenName + iGlobalKeyCounter + p + o}><td>{globalFilteredElements[p].screenName}</td></tr>
-					)
+						<tr className="global-filter-page" key={globalFilteredElements[p].screenName + iGlobalKeyCounter + p}><td>{globalFilteredElements[p].screenName}</td></tr>
+					);
+
+					for (let o = 0; o < globalFilteredElements[p].objects.length; o++){
+						aRepositoryKeys = Object.keys(globalFilteredElements[p].objects[o]);
+						
+						ObjectName = globalFilteredElements[p].objects[o][aRepositoryKeys[0]];
+						//SelectorType = globalFilteredElements[p].objects[o][aRepositoryKeys[1]];
+						SelectorValue = globalFilteredElements[p].objects[o][aRepositoryKeys[2]];
+
+						/*
+							Object Name: index #1
+							Selector Type: index #2
+							Selector Value: index #3
+						*/
+
+						
 					
 					// iGlobalKeyCounter+ 1 + `${p}` + `${o}`
 						oElementsToDisplay.push(
 							<tr key={p + o + iGlobalKeyCounter + ObjectName}>
 								<td className="element-name-width">{ObjectName}<div className="toggable-selector-name"><hr />{SelectorValue}</div></td>
-								<td><div className="addCase" onClick={() => this.addCase(globalFilteredElements[p].objects[o], globalFilteredElements[p].screenName)}>Add</div></td>
+								<td><div className="addCase" onClick={() => this.addCase(globalFilteredElements[p].objects[o], globalFilteredElements[p].screenName)}>+</div></td>
 							</tr>
 						);
 					}
@@ -2751,7 +2790,7 @@
 							oElementsToDisplay.push(
 								<tr key={iGlobalKeyCounter}>
 									<td className="element-name-width">{ObjectName}<div className="toggable-selector-name"><hr />{SelectorValue}</div></td>
-									<td><div className="addCase" onClick={() => this.addCase(oAllElements[el])}>Add</div></td>
+									<td><div className="addCase" onClick={() => this.addCase(oAllElements[el])}>+</div></td>
 								</tr>
 							);	
 						}
@@ -2759,7 +2798,7 @@
 							oElementsToDisplay.push(
 								<tr key={iGlobalKeyCounter}>
 									<td className="element-name-width">{ObjectName}<hr />{oAllElements[el]["Value"]}<p></p><div className="toggable-selector-name">{SelectorValue}</div></td>
-									<td><div className="addCase" onClick={() => this.addCase(oAllElements[el])}>Add</div></td>
+									<td><div className="addCase" onClick={() => this.addCase(oAllElements[el])}>+</div></td>
 								</tr>
 							);	
 						}
@@ -2778,8 +2817,8 @@
                     <tbody>
 						{this.props.xmlReadDone ? 
 							<tr>
-								<td>{"Add empty step"}</td>
-								<td><div className="addCase" onClick={() => this.addCase("placeholder-step")}>Add</div></td>
+								<td>{"Add_empty_step"}</td>
+								<td><div className="addCase" onClick={() => this.addCase("placeholder-step")}>+</div></td>
 							</tr>
 							: ""
 						}

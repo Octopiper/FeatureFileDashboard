@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="icon" type="image/png" href="/faviconn.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+    <title>OR Dashboard</title>
+    <link href="./resources/css/index.css" type="text/css" rel="stylesheet">
+  </head>
+
+<body>
+  <div class="header">
+    <img src="./resources/images/evtc.png" alt="EVTC Logo" width="100" height="100">
+    <h1>OR Dashboard</h1>
+  </div>
+
+  <div id="options" class="options"></div>
+  <div class="project-id">
+    <div>
+      <span>Gitlab Repository ID</span><input id="repo-id" type="text" /><span><button type="button" value="Go" onclick="goToRepoByID()">Go</button></span>
+    </div>
+  </div>
+<script>
+  function goToRepoByID(){
+    //href="selenium-appium/index.html?id=devcibp"'
+    var repoId = document.getElementById("repo-id").value;
+    
+    if (repoId == ""){
+      alert("Repository ID must not be empty");
+    }
+    else if (isNaN(repoId)){
+      alert("Repository ID must be a number");
+    }
+    else {
+      window.open("selenium-appium/index.html?respositoryid=" + repoId);
+    }
+    
+  }
+  function constructButtons(buttonsArray){
+    for (let i=0; i <= buttonsArray.length - 1; i++){
+
+		let node = document.createElement("A");
+		
+		node.href= buttonsArray[i].path;
+		node.innerHTML = buttonsArray[i].name;
+		node.classList.add('button');
+
+		for (let c=0; c <= buttonsArray[i].classList.length - 1; c++){
+		  node.classList.add(buttonsArray[i].classList[c]);
+		}
+	  
+		let parent = document.getElementById("options");
+		  parent.appendChild(node);
+    }
+  }
+
+  var xhttp = new XMLHttpRequest();
+
+  /* xhttp.onreadystatechange = function() {
+    if (this.readyState == 4){
+      if (this.status == 200) {
+
+        var response = JSON.parse(this.responseText);
+        constructButtons(response);
+      }
+      else {
+
+        alert("Request Failed. Make sure you are connected to the network.");
+        event.preventDefault();
+        event.stopPropagation();
+      }
+    }
+  };
+
+  xhttp.open("GET", "https://gitlab.evertecinc.com/api/v4/projects/414/repository/files/applications.json/raw?ref=master", true);
+  xhttp.send(); */
+
+</script>
+</body>
+</html> 
