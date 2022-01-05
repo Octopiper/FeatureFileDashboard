@@ -149,134 +149,134 @@
 
 		///////////////////////////////////////////////////////////////////
 		componentDidMount(){
-			this.setState({
-				//showSpinner: true
-			});
+			// this.setState({
+			// 	//showSpinner: true
+			// });
 
-			let sortedActions = this.state.actions.sort();
-			sortedActions.unshift("Select");
+			// let sortedActions = this.state.actions.sort();
+			// sortedActions.unshift("Select");
 
-			this.setState({
-				actions: sortedActions
-			});
+			// this.setState({
+			// 	actions: sortedActions
+			// });
 
-			var _this = this; // object pertaining to the <App /> component itself.
-			let sInputURL = window.location.href;
+			// var _this = this; // object pertaining to the <App /> component itself.
+			// let sInputURL = window.location.href;
 			
-			let aURLParameters = sInputURL.split("?app=");
-			let respositoryidParameters = sInputURL.split("?respositoryid=");
-			let repoID = respositoryidParameters[1];
+			// let aURLParameters = sInputURL.split("?app=");
+			// let respositoryidParameters = sInputURL.split("?respositoryid=");
+			// let repoID = respositoryidParameters[1];
 
-			if (false){//(aURLParameters.length != 2){
-				alert("Error: URL provided is incorrect. Please contact the developer for assitance.");
-			}
-			else if (respositoryidParameters.length == 2){
-				let projectNames = this.state.gitlabListOfProjects;	//: ["DevCIBP", "QACIBP", "PICS", "PAYS", "EBTS", "PCAS"],
-				let projectIDs = this.state.gitlabProjectID;		//: [492, 961, 701, 743, 604, 750],
+			// if (false){//(aURLParameters.length != 2){
+			// 	alert("Error: URL provided is incorrect. Please contact the developer for assitance.");
+			// }
+			// else if (respositoryidParameters.length == 2){
+			// 	let projectNames = this.state.gitlabListOfProjects;	//: ["DevCIBP", "QACIBP", "PICS", "PAYS", "EBTS", "PCAS"],
+			// 	let projectIDs = this.state.gitlabProjectID;		//: [492, 961, 701, 743, 604, 750],
 
 				
 
-				let repoURL = "https://gitlab.evertecinc.com/api/v4/projects/" + repoID + "?private_token=y-cu6cTeV4QM_zquJpte";
+			// 	let repoURL = "https://gitlab.evertecinc.com/api/v4/projects/" + repoID + "?private_token=y-cu6cTeV4QM_zquJpte";
 
-				//"https://gitlab.evertecinc.com/api/v4/projects/" + respositoryid
-				// get response.name
-				var xhttp = new XMLHttpRequest();
-				var _this = this;
+			// 	//"https://gitlab.evertecinc.com/api/v4/projects/" + respositoryid
+			// 	// get response.name
+			// 	var xhttp = new XMLHttpRequest();
+			// 	var _this = this;
 
-				var error = false;
-				var response; 
-				xhttp.onreadystatechange = function() {
-					if (this.readyState == 4 && this.status == 200){
-						//if() {
+			// 	var error = false;
+			// 	var response; 
+			// 	xhttp.onreadystatechange = function() {
+			// 		if (this.readyState == 4 && this.status == 200){
+			// 			//if() {
 						
 							
-							var response = JSON.parse(this.responseText);
+			// 				var response = JSON.parse(this.responseText);
 						
-							projectIDs.push(repoID);
-							projectNames.push(response.name);
+			// 				projectIDs.push(repoID);
+			// 				projectNames.push(response.name);
 
-							_this.setState({
-								gitlabProjectsName: [response.name],
-								gitlabListOfProjects: projectNames,
-								gitlabProjectID: projectIDs,
-								gitlabDynamicProjectID: repoID,
-								sourceOption: "Gitlab",
-								renderSourceOption: "gitlab"
-							})
-							//_this.processFeaturesResponse(response, url);
+			// 				_this.setState({
+			// 					gitlabProjectsName: [response.name],
+			// 					gitlabListOfProjects: projectNames,
+			// 					gitlabProjectID: projectIDs,
+			// 					gitlabDynamicProjectID: repoID,
+			// 					sourceOption: "Gitlab",
+			// 					renderSourceOption: "gitlab"
+			// 				})
+			// 				//_this.processFeaturesResponse(response, url);
 							
-					}
-					else {
-							//console.log(this.status);
-						error = true;
-						console.log("error in repoURL: " + repoURL);
-					}
-					//}
-					//else {
+			// 		}
+			// 		else {
+			// 				//console.log(this.status);
+			// 			error = true;
+			// 			console.log("error in repoURL: " + repoURL);
+			// 		}
+			// 		//}
+			// 		//else {
 						
-					//}
+			// 		//}
 					
-				};
-				xhttp.open("GET", repoURL, true);
-				xhttp.send();
+			// 	};
+			// 	xhttp.open("GET", repoURL, true);
+			// 	xhttp.send();
 			
 			
 				
-			}
-			else if (aURLParameters.length == 2){
-				let project;
-				let sApp = aURLParameters[1].toUpperCase();
+			// }
+			// else if (aURLParameters.length == 2){
+			// 	let project;
+			// 	let sApp = aURLParameters[1].toUpperCase();
 
 
-				switch (sApp) {
+			// 	switch (sApp) {
 
-					case "DEVCIBP":
-						project ="cibp";
-						this.setState({
-							gitlabProjectsName: ["DevCIBP"]
-						})
+			// 		case "DEVCIBP":
+			// 			project ="cibp";
+			// 			this.setState({
+			// 				gitlabProjectsName: ["DevCIBP"]
+			// 			})
 						
-						break;
-					case "QACIBP":
-						project ="cibp";
-						this.setState({
-							gitlabProjectsName: ["QACIBP"]
-						})
+			// 			break;
+			// 		case "QACIBP":
+			// 			project ="cibp";
+			// 			this.setState({
+			// 				gitlabProjectsName: ["QACIBP"]
+			// 			})
 						
-						break;	
-					case "EBTS":
-						project ="ebts";
+			// 			break;	
+			// 		case "EBTS":
+			// 			project ="ebts";
 						
-						this.setState({
-							gitlabProjectsName: ["EBTS"]
-						})
-						break;
-					case "PAYS":
-						project ="pays";
+			// 			this.setState({
+			// 				gitlabProjectsName: ["EBTS"]
+			// 			})
+			// 			break;
+			// 		case "PAYS":
+			// 			project ="pays";
 
-						this.setState({
-							gitlabProjectsName: ["PAYS"]
-						})
-						break;
-					case "PCAS":
-						project ="pcas";
+			// 			this.setState({
+			// 				gitlabProjectsName: ["PAYS"]
+			// 			})
+			// 			break;
+			// 		case "PCAS":
+			// 			project ="pcas";
 
-						this.setState({
-							gitlabProjectsName: ["PCAS"]
-						})
-						break;
-					case "EBSS":	
-					case "PICS":
-						project ="pics";
+			// 			this.setState({
+			// 				gitlabProjectsName: ["PCAS"]
+			// 			})
+			// 			break;
+			// 		case "EBSS":	
+			// 		case "PICS":
+			// 			project ="pics";
 
-						this.setState({
-							gitlabProjectsName: ["PICS"]
-						})
-						break;
-					default:
-						alert("app not found");
-				}
-			}
+			// 			this.setState({
+			// 				gitlabProjectsName: ["PICS"]
+			// 			})
+			// 			break;
+			// 		default:
+			// 			alert("app not found");
+			// 	}
+			// }
 			
 		}
 		////////////////////////////////////////////////////////////
@@ -2447,7 +2447,7 @@
 							<h3 onClick={this.showFileWindow} className="choose-file" id="showfileselection" >Click to choose OR file(s)</h3>
 							<b className="inline-element upload-done-message">Document uploaded successfully!</b>
 						</div>
-						<input className="iinput-xls-select" id="input-xls-select"  multiple type = "file" webkitdirectory="" onChange={this.handleORFileChange} />
+						<input className="input-xls-select" id="input-xls-select"  multiple type = "file" webkitdirectory="" onChange={this.handleORFileChange} />
 						
 					</div>
 				);
