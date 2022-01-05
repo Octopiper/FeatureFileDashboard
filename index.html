@@ -104,7 +104,9 @@
 							iORProgressCount: 0,
 							aPagesDropdownCount: 0,
 							aFailedObjects: [],
-							allObjectsInProject: 0
+							allObjectsInProject: 0,
+							almTestID: "",
+							testIDFunctionality: ""
 							//repoID: 
                         };
             //this.constructWebElementHTML = this.constructWebElementHTML.bind(this);    
@@ -142,11 +144,17 @@
 			this.changeInputSearchValue = this.changeInputSearchValue.bind(this);
 			this.stopSpinner = this.stopSpinner.bind(this);
 			this.orHealthyCheck = this.orHealthyCheck.bind(this);
+			this.createJavaMethod = this.createJavaMethod.bind(this);
+			this.updateALMTestID = this.updateALMTestID.bind(this);
 			//this.handleByTextFilter = this.handleByTextFilter.bind(this);
 			//this.handleByElementTypeChange = this.handleByElementTypeChange.bind(this);
         }
 
-
+		updateALMTestID(event){
+			this.setState({
+				almTestID: event.target.value
+			})
+		}
 		///////////////////////////////////////////////////////////////////
 		componentDidMount(){
 			// this.setState({
@@ -285,6 +293,49 @@
 			document.querySelector(".import-container").style.display = "block";
 		}
 		
+		createJavaMethod(){
+			// var modal = document.getElementById("showjavamethodmodal");
+			// 	modal.style.display = "block";
+			var xhttp = new XMLHttpRequest();
+			var _this = this;
+			var url = "https://evt-cupcqcdb-02.evertecinc.net/qcbin/rest/domains/EVERTEC/projects/CIBP1/tests/" + this.state.almTestID + "?alt=application/json&fields=user-08";
+			var error = false;
+			var response; 
+			var functionality;
+
+			xhttp.onreadystatechange = function() {
+				if (this.readyState == 4){
+					if(this.status == 200) {
+					
+						var response = JSON.parse(this.responseText);
+						for (let ix=0; ix < response.Fields.length; ix++){
+							if (response.Fields[ix].Name == "user-08"){
+								functionality = response.Fields[ix].values[0].value;
+
+								_this.setState({
+									testIDFunctionality: functionality
+								});
+							}
+						}
+						//_this.createGitlabORStructure(response, sOSType, url);
+						//callback(response, sOSType, url);
+					}
+					else {
+						error = true;
+					}
+				}
+				
+			};
+			xhttp.open("GET", url, true);
+			xhttp.send();
+			
+			if (error){
+				alert("Request Failed. Make sure you are connected to the VPN/Internal Network.");
+				event.preventDefault();
+				event.stopPropagation();
+			}
+
+		}
 		
 /////=================
 		/* Delete Step from Feature File
@@ -2183,6 +2234,7 @@
 				<div className="row">
 					<div id="snackbar">No elements were found...</div>
 					<Modal actionsss={this.state.actionsss}/>
+					<JavaMethodModal createJavaMethod={this.createJavaMethod}/>
 					<ShotCallToStepsModal />
 					<ImportScreenFF delCase={this.delCase} availableActions={this.state.actions} />
                     <LoadOR uploadORSheets={this.uploadORSheets} bShowORImport={this.state.bShowORImport} updateor={this.updateor}
@@ -2246,7 +2298,17 @@
 									
 									<input className="menu-button" type="button" value="Export" onClick={this.export}/>	
 								</div>
-								
+								<div className="toolbarExport" style={{marginTop: '22px'}}>
+									<p style={{margin: '0', padding: '0'}}>Create Java</p><p style={{margin: '0', padding: '0'}}>Method</p>
+									
+									<input className="menu-button" type="button" value="Create" onClick={()=> {var modal = document.getElementById("showjavamethodmodal"); modal.style.display = "block";} }/>	
+								</div>
+								<div className="toolbarExport">	
+				
+									<p>Test ID</p>
+									
+									<input className="" style={{width: '45px'}} type="text" value={this.state.almTestID} onChange={this.updateALMTestID}/>	
+								</div>
 							</div>
 						</div>		
 						
@@ -2977,7 +3039,55 @@
 			)
 		}
 	}
+	class JavaMethodModal extends React.Component {
+		constructor(props){
+			super(props);
 
+			this.state = {
+				filename: "Feature File",
+				sheetname: "Minor Feature",
+			}
+			
+		}
+		closeModal(){
+			document.getElementById("modal").style.display = 'none';
+		}
+		//componentDidMount(){
+		//	this.props.createJavaMethod();
+
+		//	alert(this.state.testIDFunctionality);
+		//}
+		
+		render(){
+			const gap = {
+				margin: '2px',
+			};
+
+			const bubble = {
+				borderRadius: '4px',
+				backgroundColor: 'rgb(31, 126, 180)',
+				padding: '2px',
+				color: 'white'
+			}
+			const alert = {
+				float: 'right',
+				backgroundColor: 'orange',
+				color: 'white',
+				borderRadius: '4px',
+				margin: '2px',
+				padding: '3px'
+			}
+			return (
+				<div id="showjavamethodmodal" className="modal">
+					<div className="modal-content">
+						<i>{"Please confirm export "}</i>
+						<input type="button" value="Create" onClick={this.props.createJavaMethod} />
+						
+					</div>
+				</div>
+			)
+		}
+	}
 	class FilterByElementsDropdown extends React.Component {
 		
 		render(){
