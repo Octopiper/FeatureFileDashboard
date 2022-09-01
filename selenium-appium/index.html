@@ -640,6 +640,7 @@
 			}
 			else if (sSelectedOS == "web"){
 				aPagesDropdown = this.state.aWebScreens;
+				console.log("WEB Objects: ", this.state.oWebScreenNObjects)
 			}
 			else if (sSelectedOS.toLowerCase() == "other mobile pages"){
 				aPagesDropdown = this.state.aOtherMobileScreens;
@@ -2185,7 +2186,7 @@
 					<Modal actionsss={this.state.actionsss}/>
 					<ShotCallToStepsModal />
 					<ImportScreenFF delCase={this.delCase} availableActions={this.state.actions} />
-                    <LoadOR uploadORSheets={this.uploadORSheets} bShowORImport={this.state.bShowORImport} updateor={this.updateor}
+                    <LoadOR oWebScreenNObjects={this.state.oWebScreenNObjects} uploadORSheets={this.uploadORSheets} bShowORImport={this.state.bShowORImport} updateor={this.updateor}
 						stopSpinner={this.stopSpinner} />
 					<div className="row">
 						<div className="toolbarwrapper">
@@ -2393,6 +2394,7 @@
 			//console.log("as;ldkfj;asldkfj;alksdfj;alksdjf;alksdjf;laksdjf;klasjd;flkj");
 			document.getElementsByClassName("upload-done-message")[1].style.display = "block";
 			this.props.stopSpinner();
+			console.log("all objects: ", this.props.oWebScreenNObjects)
 			//console.log("display= " + document.querySelector(".upload-done-message").style.display);
         }
 

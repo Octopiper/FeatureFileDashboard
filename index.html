@@ -55,11 +55,6 @@
 							gitlabProjectName: "select",
 							gitlabBranchName: "select",
 							actionNameVal: "select",
-							gitlabProjectsName: [],//"CIBP", "EBSS", "PAYS", "EBTS", "PCAS"
-							gitlabListOfProjects: ["DevCIBP", "QACIBP", "PICS", "PAYS", "EBTS", "PCAS"],
-							gitlabProjectID: [492, 961, 701, 743, 604, 750],
-							gitlabDynamicProjectID: 0,
-							projectBranches: [],
 							OR: [],
 							browserNames: [],
 							browserPages: [],
@@ -70,7 +65,7 @@
 							filteredElements: [],
 							globalFilteredElements: [],
 							cases: [],				
-							actions: ["Tap","RotateDevice", "SwitchContext", "ScrollDown", "SwipeDownwards","SwipeUpwards", "LongPress", "TapIfattributeIs", "Press", "SwitchFrame", "SelectElement", "OpenApp", "Input", "InputIfExists", "DoMathOperations", "CallTo", "Click", "ClickJS", "ClickIfExists", "Verify", "SelectByIndex", "InputIfExistsAndPressEnter", "InputDateOnCalendar", "ClickInsideTable", "ClickOnCheckboxInTable", "Hover", "GetValue", "GetText", "ClickIfCheckboxIsUnselected", "GetCheckboxState", "SwitchTab", "OpenNewTab", "CloseTab", "NavigateTo", "WaitFor", "SetTableRow", "SwipeUpwards", "SwipeDownwards", "Exit", "HandleAlert"],
+							actions: ["Tap","RotateDevice", "SwitchContext", "ScrollDown", "SwipeDownwards","SwipeUpwards", "LongPress", "TapIfattributeIs", "Press", "SwitchFrame", "SelectElement", "OpenApp", "Input", "InputIfExists", "DoMathOperations", "CallTo", "Click", "ClickJS", "ClickIfExists", "Verify", "SelectByIndex", "InputIfExistsAndPressEnter", "InputDateOnCalendar", "ClickInsideTable", "ClickOnCheckboxInTable", "Hover", "GetValue", "GetText", "ClickIfCheckboxIsUnselected", "GetCheckboxState", "SwitchTab", "OpenNewTab", "CloseTab", "NavigateTo", "WaitFor", "SetTableRow", "SwipeUpwards", "SwipeDownwards", "Exit", "HandleAlert"].sort(),
 							actionsss: [],
 							aElementsWithErrors: [],
 							searchFilterValue: "",
@@ -118,25 +113,17 @@
 			this.updateor = this.updateor.bind(this);
 			this.showImportOptions = this.showImportOptions.bind(this);
 			this.uploadORSheets = this.uploadORSheets.bind(this);
-			this.gitlabProjectChange = this.gitlabProjectChange.bind(this);
-			this.gitlabBranchChange = this.gitlabBranchChange.bind(this);
-			this.createGitlabORStructure = this.createGitlabORStructure.bind(this);
-			this.createGitlabORStructure2 = this.createGitlabORStructure2.bind(this);
-			this.fetchBranchRepos = this.fetchBranchRepos.bind(this);
-			this.fetchBranchReposCB = this.fetchBranchReposCB.bind(this);
-			this.projectReset = this.projectReset.bind(this);
-			this.branchReset = this.branchReset.bind(this);
-			this.fetchGitlabProjectBranches = this.fetchGitlabProjectBranches.bind(this);
+			
 			this.chooseSource = this.chooseSource.bind(this);
 			this.updateORObjectsInfo = this.updateORObjectsInfo.bind(this);
-			this.fetchSubDirectories = this.fetchSubDirectories.bind(this);
+			// this.fetchSubDirectories = this.fetchSubDirectories.bind(this);
 			this.actionChange = this.actionChange.bind(this);
 			this.toggleSelector = this.toggleSelector.bind(this);
 			this.hideToggableElements = this.hideToggableElements.bind(this);
 			this.getCallTo = this.getCallTo.bind(this);
-			this.processFeaturesResponse = this.processFeaturesResponse.bind(this);
-			this.fetchBranchFeatures = this.fetchBranchFeatures.bind(this);
-			this.ShowCallToSteps = this.ShowCallToSteps.bind(this);
+			
+			
+			// this.ShowCallToSteps = this.ShowCallToSteps.bind(this);
 			this.renderCallToTable = this.renderCallToTable.bind(this);
 			this.handleGlobalSearchCheckbox = this.handleGlobalSearchCheckbox.bind(this);
 			this.changeInputSearchValue = this.changeInputSearchValue.bind(this);
@@ -149,134 +136,7 @@
 
 		///////////////////////////////////////////////////////////////////
 		componentDidMount(){
-			// this.setState({
-			// 	//showSpinner: true
-			// });
-
-			// let sortedActions = this.state.actions.sort();
-			// sortedActions.unshift("Select");
-
-			// this.setState({
-			// 	actions: sortedActions
-			// });
-
-			// var _this = this; // object pertaining to the <App /> component itself.
-			// let sInputURL = window.location.href;
 			
-			// let aURLParameters = sInputURL.split("?app=");
-			// let respositoryidParameters = sInputURL.split("?respositoryid=");
-			// let repoID = respositoryidParameters[1];
-
-			// if (false){//(aURLParameters.length != 2){
-			// 	alert("Error: URL provided is incorrect. Please contact the developer for assitance.");
-			// }
-			// else if (respositoryidParameters.length == 2){
-			// 	let projectNames = this.state.gitlabListOfProjects;	//: ["DevCIBP", "QACIBP", "PICS", "PAYS", "EBTS", "PCAS"],
-			// 	let projectIDs = this.state.gitlabProjectID;		//: [492, 961, 701, 743, 604, 750],
-
-				
-
-			// 	let repoURL = "https://gitlab.evertecinc.com/api/v4/projects/" + repoID + "?private_token=y-cu6cTeV4QM_zquJpte";
-
-			// 	//"https://gitlab.evertecinc.com/api/v4/projects/" + respositoryid
-			// 	// get response.name
-			// 	var xhttp = new XMLHttpRequest();
-			// 	var _this = this;
-
-			// 	var error = false;
-			// 	var response; 
-			// 	xhttp.onreadystatechange = function() {
-			// 		if (this.readyState == 4 && this.status == 200){
-			// 			//if() {
-						
-							
-			// 				var response = JSON.parse(this.responseText);
-						
-			// 				projectIDs.push(repoID);
-			// 				projectNames.push(response.name);
-
-			// 				_this.setState({
-			// 					gitlabProjectsName: [response.name],
-			// 					gitlabListOfProjects: projectNames,
-			// 					gitlabProjectID: projectIDs,
-			// 					gitlabDynamicProjectID: repoID,
-			// 					sourceOption: "Gitlab",
-			// 					renderSourceOption: "gitlab"
-			// 				})
-			// 				//_this.processFeaturesResponse(response, url);
-							
-			// 		}
-			// 		else {
-			// 				//console.log(this.status);
-			// 			error = true;
-			// 			console.log("error in repoURL: " + repoURL);
-			// 		}
-			// 		//}
-			// 		//else {
-						
-			// 		//}
-					
-			// 	};
-			// 	xhttp.open("GET", repoURL, true);
-			// 	xhttp.send();
-			
-			
-				
-			// }
-			// else if (aURLParameters.length == 2){
-			// 	let project;
-			// 	let sApp = aURLParameters[1].toUpperCase();
-
-
-			// 	switch (sApp) {
-
-			// 		case "DEVCIBP":
-			// 			project ="cibp";
-			// 			this.setState({
-			// 				gitlabProjectsName: ["DevCIBP"]
-			// 			})
-						
-			// 			break;
-			// 		case "QACIBP":
-			// 			project ="cibp";
-			// 			this.setState({
-			// 				gitlabProjectsName: ["QACIBP"]
-			// 			})
-						
-			// 			break;	
-			// 		case "EBTS":
-			// 			project ="ebts";
-						
-			// 			this.setState({
-			// 				gitlabProjectsName: ["EBTS"]
-			// 			})
-			// 			break;
-			// 		case "PAYS":
-			// 			project ="pays";
-
-			// 			this.setState({
-			// 				gitlabProjectsName: ["PAYS"]
-			// 			})
-			// 			break;
-			// 		case "PCAS":
-			// 			project ="pcas";
-
-			// 			this.setState({
-			// 				gitlabProjectsName: ["PCAS"]
-			// 			})
-			// 			break;
-			// 		case "EBSS":	
-			// 		case "PICS":
-			// 			project ="pics";
-
-			// 			this.setState({
-			// 				gitlabProjectsName: ["PICS"]
-			// 			})
-			// 			break;
-			// 		default:
-			// 			alert("app not found");
-			// 	}
-			// }
 			
 		}
 		////////////////////////////////////////////////////////////
@@ -397,16 +257,6 @@
 			//console.log(this.state.cases);
 		}
 
-		/*
-		handleByTextFilter(e){
-			var nodeName = event.target.nodeName;
-
-			this.setState({
-				searchFilterValue: e.target.value
-			},this.handleFilterChange("fromText")
-			);
-		}
-		*/
 		changeInputSearchValue(e){
 
 			
@@ -421,26 +271,7 @@
 			}
 		}
 		
-		handleFilterChange(e){// by type
-			
-			/*
-			var nodeName = event.target.nodeName;
-			var sElemType, sSearchText;
-			var globalFilter = true;
-
-			console.log(event.target.nodeName);
-			console.log(e.target.value);
-
-
-			if (nodeName.toLowerCase() == "input"){
-				sSearchText = e.target.value;
-
-				this.setState({
-					searchFilterValue: e.target.value
-				});
-			}
-			*/
-			
+		handleFilterChange(e){// by type	
 
 			let sSearchText;
 			if (e == "clear"){
@@ -713,92 +544,7 @@
 			}
 			
         }
-		fetchGitlabPageObjects(sPageName, sSelectedOS){
-			var selectedProject = this.state.gitlabProjectName;
-			
-			var projects = this.state.gitlabListOfProjects;//this.state.gitlabProjectsName;
-			var projectsID = this.state.gitlabProjectID;
-			//AndroidCIBPAccounts.xls
-			var idx = projectsID[projects.indexOf(selectedProject)];
-			/////////
-			let encodedPathAndName;
-
-			if(sPageName.indexOf("/") > 0){
-				encodedPathAndName = sPageName.replaceAll('/', '%2F');
-			}
-			else {
-				encodedPathAndName = sPageName;
-			}
-
-			if (sSelectedOS != "web"){ //this.state.osDropdownVal
-				var url = "https://gitlab.evertecinc.com/api/v4/projects/" + idx + "/repository/files/mobile-keyword-test-automation-framework%2Fsrc%2Ftest%2Fresources%2Fobjectrepository%2F"+ encodedPathAndName +"/raw?" + this.state.token + "&ref=" + this.state.gitlabBranchName;
-			}
-			else {
-				var url = "https://gitlab.evertecinc.com/api/v4/projects/" + idx + "/repository/files/keyword-test-automation-framework%2Fsrc%2Ftest%2Fresources%2Fobjectrepository%2F"+ encodedPathAndName +"/raw?" + this.state.token + "&ref=" + this.state.gitlabBranchName;
-			}
-			var sOSReadIfAndroid = sPageName.toLowerCase().indexOf("android");
-			var sOSReadIfIos= sPageName.toLowerCase().indexOf("ios");
-
-			
-			// then select the right URL
-			//////////
-			
-
-			var req = new XMLHttpRequest();
-
-			req.responseType = "arraybuffer";
-
-			var _this = this;
-			var aStepsToAppend;
-
-			//req.onload = function(e) {
-			req.onreadystatechange = function(e){
-			var data = new Uint8Array(req.response);
-				if (this.readyState == 4){
-					if (this.status == 200){
-						var workbook = XLSX.read(data, {type:"array"});
-						//console.log(workbook);
-					
-						//workbook.SheetNames.forEach(function(sheet){
-							//var ul = document.getElementById("sheet-list");
-
-							aStepsToAppend = XLSX.utils.sheet_to_row_object_array(workbook.Sheets[workbook.SheetNames[0]])//workbook.Sheets[sheet]) //, {header: 1}
-							_this.updateORObjectsInfo(sPageName, aStepsToAppend);
-							
-							_this.setState({
-								iORProgressCount: _this.state.iORProgressCount + 1,
-							});
-
-							console.log("completed: " + _this.state.aPagesDropdownCount + "/" + _this.state.iORProgressCount);
-
-							if (_this.state.aPagesDropdownCount == _this.state.iORProgressCount){
-								_this.setState({
-									showSpinner: false,
-									iORProgressCount: 0
-								})
-								alert("Done");
-								console.log("Failed objects: ", _this.state.aFailedObjects);
-								console.log("all objects in project: ", _this.state.allObjectsInProject);
-								
-								//alert("completed: " + _this.state.aPagesDropdownCount + "/" + _this.state.iORProgressCount);
-							}
-
-								//console.log(aStepsToAppend);
-							// _thisAppScope.setState({                          })
-							//}
-						
-						//});	
-						
-					}
-				}
-			/* DO SOMETHING WITH workbook HERE */
-			}
-
-			req.open("GET", url, true);
-			req.send();
 		
-
-		}
 		pageChange(event){
 			this.hideToggableElements();
 			
@@ -888,337 +634,14 @@
 						.childObjects
 		*/
 
-		branchReset(){
-
-			this.hideToggableElements();
-
-			this.setState({
-				//gitlabBranchName: "select",
-				//projectBranches: [],
-				os: [],
-				osDropdownVal: "select",
-				pageDropdownVal: "select",
-				filteredElements: [],
-				sElementsFilter: "select", // this type of search is not being used, but variable is kept is case of further need
-				pagesDropdown: [],
-				oAndroidScreenNObjects: [],
-				aAndroidScreens: [],
-				oIosScreenNObjects: [],
-				aIosScreens: [],
-				oWebScreenNObjects: [],
-				aWebScreens: [],
-				globalFilteredElements: [],
-				globalSearchCheckbox: false,
-				searchFilterValue: ""
-				// should I also clear "elements" to []???
-			})
-		}
-		projectReset(){
-		// reset branches
-			this.setState({
-				gitlabBranchName: "select",
-				projectBranches: [],
-				os: [],
-				pageDropdownVal: "select",
-				osDropdownVal: "select",
-				filteredElements: [],
-				sElementsFilter: "select", // this type of search is not being used, but variable is kept is case of further need
-				pagesDropdown: [],
-				oAndroidScreenNObjects: [],
-				aAndroidScreens: [],
-				oIosScreenNObjects: [],
-				aIosScreens: [],
-				oWebScreenNObjects: [],
-				aWebScreens: []
-				// should I also clear "elements" to []???
-			})
-		}
+		
 		stopSpinner(){
 			this.setState({
 				showSpinner: false
 			})
 		}
 
-		gitlabBranchChange(event){
-
-			this.branchReset();
-			
-			var selectedBranch = event.target.value;
-
-			this.setState({
-				gitlabBranchName: selectedBranch
-			})
-
-			if (selectedBranch != "select"){
-				
-				var selectedProject = this.state.gitlabProjectName;
-			
-				var projects = this.state.gitlabListOfProjects;//this.state.gitlabProjectsName;
-				var projectsID = this.state.gitlabProjectID;
-
-				var idx = projectsID[projects.indexOf(selectedProject)];
-
-				//https://gitlab.evertecinc.com/api/v4/projects/492/repository/tree?path=keyword-test-automation-framework/src/test/resources/objectrepository&ref=develop&private_token=y-cu6cTeV4QM_zquJpte&per_page=100
-				var webPath = "https://gitlab.evertecinc.com/api/v4/projects/" + idx + "/repository/tree?path=keyword-test-automation-framework/src/test/resources/objectrepository&ref=" + selectedBranch + "&" + this.state.token + "&per_page=100";
-				var mobilePath = "https://gitlab.evertecinc.com/api/v4/projects/" + idx + "/repository/tree?path=mobile-keyword-test-automation-framework/src/test/resources/objectrepository&ref=" + selectedBranch + "&" + this.state.token + "&per_page=100";
-
-				var response = this.fetchBranchRepos(webPath, 'web');
-				var response = this.fetchBranchRepos(mobilePath, 'mobile');
-
-				var webFeaturesPath = "https://gitlab.evertecinc.com/api/v4/projects/" + idx + "/repository/tree?path=keyword-test-automation-framework/src/test/resources/features&ref=" + selectedBranch + "&" + this.state.token + "&per_page=100";
-				var mobileFeaturesPath = "https://gitlab.evertecinc.com/api/v4/projects/" + idx + "/repository/tree?path=mobile-keyword-test-automation-framework/src/test/resources/features&ref=" + selectedBranch + "&" + this.state.token + "&per_page=100";
-				this.fetchBranchFeatures(webFeaturesPath);
-				this.fetchBranchFeatures(mobileFeaturesPath);
-				
-				//console.log(response);
-				//var aRepos = JSON.parse(response);
-				//_this.createGitlabORStructur e(response);
-
-				
-			//var url = "https://gitlab.evertecinc.com/api/v4/projects/" + idx + "/repository/files/mobile-keyword-test-automation-framework%2Fsrc%2Ftest%2Fresources%2Fobjectrepository%2FAndroidCIBPAccounts.xls/raw?private_token=y-cu6cTeV4QM_zquJpte&ref=develop";
-			}
-		}
-		fetchBranchFeatures(url){
-			var xhttp = new XMLHttpRequest();
-			var _this = this;
-
-			var error = false;
-			var response; 
-			xhttp.onreadystatechange = function() {
-				if (this.readyState == 4){
-					if(this.status == 200) {
-					
-						var response = JSON.parse(this.responseText);
-						_this.processFeaturesResponse(response, url);
-						
-					}
-					else {
-						console.log("error in url: " + url);
-						error = true;
-					}
-				}
-				else {
-					
-				}
-				
-			};
-			xhttp.open("GET", url, true);
-			xhttp.send();
-			
-			if (error){
-				alert("Request Failed. Make sure you are connected to the VPN/Internal Network.");
-				event.preventDefault();
-				event.stopPropagation();
-			}
-		}
-		processFeaturesResponse(aFeatures, url){
-
-			var feature;
-			for (feature of aFeatures){
-				//console.log("url: " + url);
-				let repo_pathName = feature.name;
-				let type = feature.type;
-				let isXLS = repo_pathName.indexOf('.xls'); 
-
-				let path = feature.path;
-				if (type == "tree" && path.toLowerCase().indexOf("callto") != -1){
-
-					let pathParts = url.split("&ref");
-					let newPath = pathParts[0] + "/" + repo_pathName + "&ref" + pathParts[1];
-
-					this.fetchBranchFeatures(newPath); // 1. It is a repo w/o sub path
-				}
-				//else if (type == "tree"){
-				//	let pathParts = path.split("&ref");
-				//	let newPath = pathParts[0] + "/" + repo_pathName + "&ref" + pathParts[1];
-
-				//	this.fetchBranchFeatures(newPath); // 1. It is a repo w/o sub path
-				//}
-				else if (type == "blob"){
-					//this.createGitlabORStructure2(repo_pathName, sOSType, path); // 2. It already went through subpath search and ended here after reaching the .xls file
-					/*
-						Store information in STATE variable
-					*/
-					var callToFeatures = this.state.callToFeatures;
-					callToFeatures.unshift({"path": url, "name": feature.name});
-					//console.log("callToFeatures: ", callToFeatures);
-					this.setState({
-						callToFeatures: callToFeatures
-					})
-				}
-				else {
-					//nothing
-				}	
-			}
-			
-		}
-		gitlabProjectChange(event){
-			
-			//this.projectReset();
-
-			var selectedProject = event.target.value;
-
-			if (selectedProject != "select"){
-				this.setState({
-					gitlabProjectName: selectedProject
-				})
-				var branchesUrl;
-				if (this.state.gitlabDynamicProjectID == 0){
-					switch (selectedProject.toLowerCase()){
-						case "devcibp":
-							branchesUrl = "https://gitlab.evertecinc.com/api/v4/projects/492/repository/branches?" + this.state.token + "&per_page=100";
-							break;
-						case "qacibp":
-							branchesUrl = "https://gitlab.evertecinc.com/api/v4/projects/961/repository/branches?" + this.state.token + "&per_page=100";
-							break;	
-						case "pics":
-							branchesUrl = "https://gitlab.evertecinc.com/api/v4/projects/701/repository/branches?" + this.state.token + "&per_page=100";
-							break;
-						case "pays":
-							branchesUrl = "https://gitlab.evertecinc.com/api/v4/projects/743/repository/branches?" + this.state.token + "&per_page=100";
-							break;
-						case "ebts":
-							branchesUrl = "https://gitlab.evertecinc.com/api/v4/projects/604/repository/branches?" + this.state.token + "&per_page=100";
-							break;
-						case "pcas":
-							branchesUrl = "https://gitlab.evertecinc.com/api/v4/projects/750/repository/branches?" + this.state.token + "&per_page=100";
-							break;
-						default:
-					}
-				}
-				else {
-					branchesUrl = "https://gitlab.evertecinc.com/api/v4/projects/"+ this.state.gitlabDynamicProjectID + "/repository/branches?" + this.state.token + "&per_page=100";
-				}
-// Make a request for a user with a given ID
-
-				/* set up async GET request 	*/
-				var xhttp = new XMLHttpRequest();
-				var _this = this;
-
-				var error = false;
-				xhttp.onreadystatechange = function() {
-					if (this.readyState == 4){
-						
-						if (this.status == 200) {
-							var response = JSON.parse(this.responseText);
-
-							var availableBranches = [];
-							var branch;
-							for (branch of response){
-								availableBranches.push(branch.name);
-							}
-
-							_this.setState({
-								projectBranches: availableBranches
-							})
-						}
-						else {
-							error = true;
-						}
-					}
-				};
-				xhttp.open("GET", branchesUrl, true);
-				xhttp.send();
-
-				if (error){
-					alert("Request Failed. Make sure you are connected to the VPN/Internal Network.");
-					event.preventDefault();
-					event.stopPropagation();
-				}
-			
-			}
-			else{
-				this.setState({
-					gitlabBranchName: "select",
-					gitlabProjectName: "select",
-					projectBranches: []
-				})
-			}
-		}
-		fetchGitlabProjectBranches(proyect){
-			
-			//this.projectReset();
-
-			var selectedProject = proyect;//event.target.value;
-
-			if (selectedProject != "select"){
-				this.setState({
-					gitlabProjectName: selectedProject
-				})
-				var branchesUrl;
-
-				if (this.state.gitlabDynamicProjectID == 0){
-
-					switch (selectedProject.toLowerCase()){
-						case "cibp":
-						branchesUrl = "https://gitlab.evertecinc.com/api/v4/projects/492/repository/branches?" + this.state.token + "&per_page=100";
-							break;
-						case "ebss":
-							branchesUrl = "https://gitlab.evertecinc.com/api/v4/projects/701/repository/branches?" + this.state.token + "&per_page=100";
-							break;
-						case "pays":
-							branchesUrl = "https://gitlab.evertecinc.com/api/v4/projects/743/repository/branches?" + this.state.token + "&per_page=100";
-							break;
-						case "ebts":
-							branchesUrl = "https://gitlab.evertecinc.com/api/v4/projects/604/repository/branches?" + this.state.token + "&per_page=100";
-							break;
-						case "pcas":
-							branchesUrl = "https://gitlab.evertecinc.com/api/v4/projects/750/repository/branches?" + this.state.token + "&per_page=100";
-							break;
-						default:
-					}
-				}
-				else {
-					branchesUrl = "https://gitlab.evertecinc.com/api/v4/projects/"+ gitlabDynamicProjectID + "/repository/branches?" + this.state.token + "&per_page=100";
-				}
-				
-				/* branches: 
-				[["CIBP", "EBSS", "PAYS", "EBTS", "PCAS"],[492, 701, 743, 604, 750]]
-				*/
-				/* set up async GET request */
-				var xhttp = new XMLHttpRequest();
-				var _this = this;
-
-				var error = false;
-				xhttp.onreadystatechange = function() {
-					if (this.readyState == 4){
-						
-						if (this.status == 200) {
-							var response = JSON.parse(this.responseText);
-
-							var availableBranches = [];
-							var branch;
-							for (branch of response){
-								availableBranches.push(branch.name);
-							}
-
-							_this.setState({
-								projectBranches: availableBranches
-							})
-						}
-						else {
-							error = true;
-						}
-					}
-				};
-				xhttp.open("GET", branchesUrl, true);
-				xhttp.send();
-
-				if (error){
-					alert("Request Failed. Make sure you are connected to the VPN/Internal Network.");
-					event.preventDefault();
-					event.stopPropagation();
-				}
-				
-			}
-			else{
-				this.setState({
-					gitlabBranchName: "select",
-					gitlabProjectName: "select",
-					projectBranches: []
-				})
-			}
-		}
+		
 		export(){
 			var modal = document.getElementById("modal");
 				modal.style.display = "block";
@@ -1229,42 +652,34 @@
 			var sAction, sObject, sInput, sOutput, sComment;
 
 			for (let r = 1; r < rows; r++){
-				/*if (r==1){
-					sAction = table.rows[r].cells[0].innerText;
+			
+				if (table.rows[r].cells[1].firstChild == null){
 					sObject =  table.rows[r].cells[1].innerText;
-					sInput = table.rows[r].cells[2].getElementsByTagName("textarea")[0].value;
-					sOutput = table.rows[r].cells[3].innerText;
-					sComment = table.rows[r].cells[4].getElementsByTagName("textarea")[0].value;
 				}
 				else {
-					*/
-					if (table.rows[r].cells[1].firstChild == null){
+					if (table.rows[r].cells[1].firstChild.nodeName == "TEXTAREA") {
+						sObject =  table.rows[r].cells[1].firstChild.value;
+					}
+					else{
 						sObject =  table.rows[r].cells[1].innerText;
 					}
-					else {
-						if (table.rows[r].cells[1].firstChild.nodeName == "TEXTAREA") {
-							sObject =  table.rows[r].cells[1].firstChild.value;
-						}
-						else{
-							sObject =  table.rows[r].cells[1].innerText;
-						}
-					}
+				}
 
-					if (table.rows[r].cells[3].firstChild == null){
-						//sObject =  table.rows[r].cells[3].innerText;
-						sOutput = table.rows[r].cells[3].innerText;
+				if (table.rows[r].cells[3].firstChild == null){
+					//sObject =  table.rows[r].cells[3].innerText;
+					sOutput = table.rows[r].cells[3].innerText;
+				}
+				else {
+					if (table.rows[r].cells[3].firstChild.nodeName == "TEXTAREA") {
+						sOutput = table.rows[r].cells[3].getElementsByTagName("textarea")[0].value;
+						//sObject =  table.rows[r].cells[3].firstChild.value;
 					}
-					else {
-						if (table.rows[r].cells[3].firstChild.nodeName == "TEXTAREA") {
-							sOutput = table.rows[r].cells[3].getElementsByTagName("textarea")[0].value;
-							//sObject =  table.rows[r].cells[3].firstChild.value;
-						}
-					}
-					sAction = table.rows[r].cells[0].getElementsByTagName("select")[0].value;
-					
-					sInput = table.rows[r].cells[2].getElementsByTagName("textarea")[0].value;
-					
-					sComment = table.rows[r].cells[4].getElementsByTagName("textarea")[0].value;
+				}
+				sAction = table.rows[r].cells[0].getElementsByTagName("select")[0].value;
+				
+				sInput = table.rows[r].cells[2].getElementsByTagName("textarea")[0].value;
+				
+				sComment = table.rows[r].cells[4].getElementsByTagName("textarea")[0].value;
 				//}
 				//console.log(action);
 				actions.push(
@@ -1502,305 +917,9 @@
 						sElementsFilter: "select"
 					});
 				}
-
-
-//////////////
 		}
 
-		fetchBranchReposCB(url, sOSType, callback){
-			var xhttp = new XMLHttpRequest();
-			var _this = this;
-
-			var error = false;
-			var response; 
-			xhttp.onreadystatechange = function() {
-				if (this.readyState == 4){
-					if(this.status == 200) {
-					
-						var response = JSON.parse(this.responseText);
-						//_this.createGitlabORStructure(response, sOSType, url);
-						callback(response, sOSType, url);
-					}
-					else {
-						error = true;
-					}
-				}
-				
-			};
-			xhttp.open("GET", url, true);
-			xhttp.send();
-			
-			if (error){
-				alert("Request Failed. Make sure you are connected to the VPN/Internal Network.");
-				event.preventDefault();
-				event.stopPropagation();
-			}
-
-		}
-
-		fetchBranchRepos(url, sOSType){
-			var xhttp = new XMLHttpRequest();
-			var _this = this;
-
-			var error = false;
-			var response; 
-			xhttp.onreadystatechange = function() {
-				if (this.readyState == 4){
-					if(this.status == 200) {
-					
-						var response = JSON.parse(this.responseText);
-						_this.createGitlabORStructure(response, sOSType, url);
-						
-					}
-					else {
-						error = true;
-					}
-				}
-				
-			};
-			xhttp.open("GET", url, true);
-			xhttp.send();
-			
-			if (error){
-				alert("Request Failed. Make sure you are connected to the VPN/Internal Network.");
-				event.preventDefault();
-				event.stopPropagation();
-			}
-
-		}
-
-		createGitlabORStructure(aOR, sOSType, path){
-
-			var objectRepo;
-			for (objectRepo of aOR){
-
-				let repo_pathName = objectRepo.name;
-
-				let isXLS = repo_pathName.indexOf('.xls'); 
-
-				let url = path
-				if (isXLS == -1){
-
-					let pathParts = path.split("&ref");
-					let newPath = pathParts[0] + "/" + repo_pathName + "&ref" + pathParts[1];
-
-					this.fetchSubDirectories(newPath, sOSType); // 1. It is a repo w/o sub path
-				}
-				else {
-					this.createGitlabORStructure2(repo_pathName, sOSType, path); // 2. It already went through subpath search and ended here after reaching the .xls file
-				}
-				
-			}
-
-		}
-
-		fetchSubDirectories(Path, sOSType){
-			var selectedProject = this.state.gitlabProjectName;
-			
-			var projects = this.state.gitlabListOfProjects;//this.state.gitlabProjectsName;
-			var projectsID = this.state.gitlabProjectID;
-
-			var idx = projectsID[projects.indexOf(selectedProject)];
-			var selectedBranch = this.state.gitlabBranchName;
-
-			//https://gitlab.evertecinc.com/api/v4/projects/492/repository/tree?path=keyword-test-automation-framework/src/test/resources/objectrepository&ref=develop&private_token=y-cu6cTeV4QM_zquJpte&per_page=100
-			
-			if (sOSType == 'mobile'){
-				//var mobilePath = "https://gitlab.evertecinc.com/api/v4/projects/" + idx + "/repository/tree?path=mobile-keyword-test-automation-framework/src/test/resources/objectrepository/" + subPath + "&ref=" + selectedBranch + "&private_token=y-cu6cTeV4QM_zquJpte&per_page=100";
-				var response = this.fetchBranchRepos(Path, 'mobile');//### original
-				//var response = this.fetchBranchReposCB(Path, 'mobile');
-			}
-			else {
-			//	var webPath = "https://gitlab.evertecinc.com/api/v4/projects/" + idx + "/repository/tree?path=keyword-test-automation-framework/src/test/resources/objectrepository/" + subPath + "&ref=" + selectedBranch + "&private_token=y-cu6cTeV4QM_zquJpte&per_page=100";
-				var response = this.fetchBranchRepos(Path, 'web');//### original
-				//var response = this.fetchBranchReposCB(Path, 'web', this.createGitlabORStructure);
-			}
-			
-		}
-
-
-		createGitlabORStructure2(sORName, sOSType, path){
-
-			let pathParts = path.split("&ref");
-			let after_objectrepository = pathParts[0].split("objectrepository/");
-
-			var subPath = "none";
-
-			if (after_objectrepository.length > 1){ // has sub paths
-				let repoSubPath = after_objectrepository[1];//pathParts[0] + "/" + repo_pathName + "&ref" + pathParts[1];
-
-				subPath = repoSubPath;//subPathChunck.split(sORName)[0];
-
-			}
-			
-
-			var sOSReadIfAndroid = sORName.toLowerCase().indexOf("android");
-			var sOSReadIfIos= sORName.toLowerCase().indexOf("ios");
-			var sOSName;
-
-			var oSheetsStruct = {};
-
-			//let isXLS = sORName.indexOf('.xls'); 
-
-			if (false) { //(isXLS == -1){
-				//this.fetchSubDirectories(sORName, sOSType);
-			}
-			else {
-				var sSheetName = sORName;//.substring(0, sORName.indexOf('.xls')); 
-				// NO puedo remover el .xls
-
-				if (sOSReadIfAndroid >= 0 && sOSType == 'mobile'){
-					sOSName = "android";
-
-					var aCurrentScreens = this.state.aAndroidScreens; //aGitlabAndroidScreens
-						//aCurrentScreens.push(sSheetName);//subPath + "/"+ 
-					
-					var oAndroidScreenNObjects = this.state.oAndroidScreenNObjects; //oGitlabAndroidScreenNObjects
-										
-					if (subPath != "none"){
-						aCurrentScreens.push(subPath + "/" + sSheetName);//
-						oSheetsStruct.screenName = subPath + "/"+ sSheetName;
-						oSheetsStruct.sSheetName = sSheetName;
-					}
-					else{
-						aCurrentScreens.push(sSheetName);
-						oSheetsStruct.screenName = sSheetName;
-					}										
-					
-					oSheetsStruct.subPath = subPath;
-
-					//oSheetsStruct.objects = aSheetInfo;
-
-					oAndroidScreenNObjects.push(oSheetsStruct);
-
-					this.setState({
-						aAndroidScreens: aCurrentScreens,//aGitlabAndroidScreens: aCurrentScreens,
-						oAndroidScreenNObjects: oAndroidScreenNObjects //oGitlabAndroidScreenNObjects: oAndroidScreenNObjects
-					});
-
-
-				}
-				else if (sOSReadIfIos >= 0 && sOSType == 'mobile'){
-					sOSName = "ios";
-
-					var aCurrentScreens = this.state.aIosScreens; //aGitlabIosScreens
-						//aCurrentScreens.push(sSheetName);//subPath + "/"+ 
-
-					var oIosScreenNObjects = this.state.oIosScreenNObjects; //oGitlabIosScreenNObjects
-										
-					if (subPath != "none"){
-						aCurrentScreens.push(subPath + "/" + sSheetName);
-						oSheetsStruct.screenName = subPath + "/"+ sSheetName;
-						oSheetsStruct.sSheetName = sSheetName;
-					}
-					else{
-						aCurrentScreens.push(sSheetName);
-						oSheetsStruct.screenName = sSheetName;
-					}
-					oSheetsStruct.subPath = subPath;
-					//oSheetsStruct.objects = aSheetInfo;
-
-					oIosScreenNObjects.push(oSheetsStruct);
-
-					this.setState({
-						aIosScreens: aCurrentScreens, //aGitlabIosScreens: aCurrentScreens,
-						oIosScreenNObjects: oIosScreenNObjects //oGitlabIosScreenNObjects: oIosScreenNObjects
-					});
-				}
-				else if (sOSType == 'mobile') {
-
-					sOSName = "mobile";
-
-					var aCurrentScreens = this.state.aOtherMobileScreens; //aGitlabIosScreens
-						//aCurrentScreens.push(sSheetName);//subPath + "/"+ 
-
-					var oOtherMobileScreenNObjects = this.state.oOtherMobileScreenNObjects; //oGitlabIosScreenNObjects
-										
-					if (subPath != "none"){
-						aCurrentScreens.push(subPath + "/"+ sSheetName);//
-						oSheetsStruct.screenName = subPath + "/"+ sSheetName;
-						oSheetsStruct.sSheetName = sSheetName;
-					}
-					else{
-						aCurrentScreens.push(sSheetName);
-						oSheetsStruct.screenName = sSheetName;
-					}
-					oSheetsStruct.subPath = subPath;
-					//oSheetsStruct.objects = aSheetInfo;
-
-					oOtherMobileScreenNObjects.push(oSheetsStruct);
-
-					this.setState({
-						aOtherMobileScreens: aCurrentScreens, //aGitlabIosScreens: aCurrentScreens,
-						oOtherMobileScreenNObjects: oOtherMobileScreenNObjects //oGitlabIosScreenNObjects: oIosScreenNObjects
-					});
-				}
-				else if (sOSType == 'web'){
-					
-					sOSName = "web";
-
-					var aCurrentScreens = this.state.aWebScreens;//aGitlabWebScreens
-						//aCurrentScreens.push(sSheetName);//subPath + "/"+ 
-
-					var oWebScreenNObjects = this.state.oWebScreenNObjects; //oGitlabWebScreenNObjects
-										
-					if (subPath != "none"){
-						aCurrentScreens.push(subPath + "/"+ sSheetName);//
-						oSheetsStruct.screenName = subPath + "/"+ sSheetName;
-						oSheetsStruct.sSheetName = sSheetName;
-					}
-					else{
-						aCurrentScreens.push(sSheetName);
-						oSheetsStruct.screenName = sSheetName;
-					}
-					oSheetsStruct.subPath = subPath;
-					//oSheetsStruct.objects = aSheetInfo;
-
-					oWebScreenNObjects.push(oSheetsStruct);
-
-					this.setState({
-						aWebScreens: aCurrentScreens,//aGitlabWebScreens: aCurrentScreens,
-						oWebScreenNObjects: oWebScreenNObjects //oGitlabWebScreenNObjects: oWebScreenNObjects
-					});
-				}
-
-				var aOS = this.state.os;
-				var bCheckAndroidExists = aOS.includes('android');
-				var bCheckIOSExists = aOS.includes('ios');
-				var bCheckWEBExists = aOS.includes('web');
-				var bCheckOtherMobileExists = aOS.includes('Other Mobile Pages');
-
-				if (sOSName == 'android' && !bCheckAndroidExists && sOSType == 'mobile'){
-					aOS.push('android');
-
-					this.setState({
-						os: aOS
-					})
-				}
-				if (sOSName == 'ios' && !bCheckIOSExists && sOSType == 'mobile'){
-					aOS.push('ios');
-
-					this.setState({
-						os: aOS
-					})
-				}
-				if (sOSName == 'mobile' && sOSType == 'mobile' && !bCheckOtherMobileExists){
-					aOS.push('Other Mobile Pages');
-
-					this.setState({
-						os: aOS
-					})
-				}
-				if (sOSName == 'web' && !bCheckWEBExists && sOSType == 'web'){
-					aOS.push('web');
-
-					this.setState({
-						os: aOS
-					})
-				}
-				
-			}
-		}
+		
 		
 		updateor(sSheetName, aSheetInfo, os){
 			//console.log(sSheetName, aSheetInfo);
@@ -1904,15 +1023,13 @@
 		}
 
 		uploadORSheets(){
-			let currStateShowORImport = this.state.bShowORImport;
-		//	console.log("clicked");
-		//	console.log(currStateShowORImport);
-			
+			let currStateShowORImport = this.state.bShowORImport;		
 
 			this.setState({
 				bShowORImport: !currStateShowORImport
 			})
 		}
+
 		chooseSource(){
 			let sOptionName = event.target.value;
 
@@ -1945,9 +1062,6 @@
 			this.setState({
 				actionNameVal: event.target.value
 			})
-
-		//	console.log(event.target.value);
-
 		}
 		toggleSelector(){
 			var toggableElements = document.getElementsByClassName('toggable-selector-name');
@@ -1973,112 +1087,34 @@
 			}	
 		}
 		getCallTo(e){
-			//e.preventDefault();
-		//	console.log("Hello Call To:");
+
 		}
-		ShowCallToSteps(iRowNumber){
-			let oStepsTable = document.getElementById("toEx");
-			let sCallToName = oStepsTable.rows[iRowNumber].cells[2].firstChild.value;
-			let aCallToList = this.state.callToFeatures;
-
-			let aCallToInfo;
-			for (let c = 0; c < aCallToList.length; c++){
-				if (aCallToList[c].name == sCallToName){
-					aCallToInfo = aCallToList[c];
-					break;
-				}
-			}
-			
-
-			let sRawCallToPath = aCallToInfo.path;
-			//https://gitlab.evertecinc.com/api/v4/projects/701/repository/tree?path=keyword-test-automation-framework/src/test/resources/features/
-			//CallToActions/PICS-WEB/Open-Account/SignatureAndDocuments
-			//&ref=master&private_token=y-cu6cTeV4QM_zquJpte&per_page=100
-			let modulePath = sRawCallToPath.split("?path=")[1]; 
-				modulePath = modulePath.split("&ref")[0];//keyword-test-automation-framework/src/test/resources/features/CallToActions/PICS-WEB/Open-Account/SignatureAndDocuments
-			
-			let callToPathWithFileName = modulePath + "/" + sCallToName;
-
-			let encodedPathAndName = callToPathWithFileName.replaceAll('/', '%2F');
-			
-			var selectedProject = this.state.gitlabProjectName;
-			
-			var projects = this.state.gitlabListOfProjects;//this.state.gitlabProjectsName;
-			var projectsID = this.state.gitlabProjectID;
-			var idx = projectsID[projects.indexOf(selectedProject)];
-
-			var baseUrl = "https://gitlab.evertecinc.com/api/v4/projects/" + idx + "/repository/files/"; //mobile-keyword-test-automation-framework%2Fsrc%2Ftest%2Fresources%2Ffeatures%2F";
-			let callToPath = encodedPathAndName +"/raw?" + this.state.token + "&ref=" + this.state.gitlabBranchName;
-
-			let sCallToURL = baseUrl + callToPath;
-
-			var req = new XMLHttpRequest();
-
-			req.responseType = "arraybuffer";
-
-			var _this = this;
-			var aStepsToAppend;
-
-			//req.onload = function(e) {
-			req.onreadystatechange = function(e){
-			var data = new Uint8Array(req.response);
-				if (this.readyState == 4){
-					if (this.status == 200){
-						var workbook = XLSX.read(data, {type:"array"});
-						//console.log(workbook);
-					
-						//workbook.SheetNames.forEach(function(sheet){
-							//var ul = document.getElementById("sheet-list");
-
-							//aStepsToAppend = XLSX.utils.sheet_to_row_object_array(workbook.Sheets[sheet]) //, {header: 1}
-							aStepsToAppend = XLSX.utils.sheet_to_row_object_array(workbook.Sheets[workbook.SheetNames[0]]) //, {header: 1}
-							_this.renderCallToTable(aStepsToAppend);
-							//_this.updateORObjectsInfo(sPageName, aStepsToAppend);
-								//console.log(aStepsToAppend);
-							// _thisAppScope.setState({                          })
-							//}
-						
-						//});	
-					}
-				}
-			/* DO SOMETHING WITH workbook HERE */
-			}
-
-			req.open("GET", sCallToURL, true);
-			req.send();
-			/*
-				find the name of the CallTo in Col 3
-				find the path based on that name. path is in array callToFeatures.path
-				perform fetch to get callto steps
-				display a new window with a table with the steps
-					add button to close window
-			*/
-		}
+		
 
 		handleGlobalSearchCheckbox(e){
 		
-				let value = e.target.checked;
+			let value = e.target.checked;
 
-				if (value) {
+			if (value) {
 
-					// if globalseach is desired, then initially clear array of elements from previous search or previous list of elements that belong to a page
-					this.setState({
-						globalSearchCheckbox: !this.state.globalSearchCheckbox,
-						pageDropdownVal: "select",
-						globalFilteredElements: []
-						
-						//filteredElements: [],
-						//globalFilteredElements: []
-					})
-				}
-				else {
-					this.setState({
-						globalSearchCheckbox: !this.state.globalSearchCheckbox,
-						pageDropdownVal: "select",
-						filteredElements: [],
-						globalFilteredElements: []
-					})
-				}
+				// if globalseach is desired, then initially clear array of elements from previous search or previous list of elements that belong to a page
+				this.setState({
+					globalSearchCheckbox: !this.state.globalSearchCheckbox,
+					pageDropdownVal: "select",
+					globalFilteredElements: []
+					
+					//filteredElements: [],
+					//globalFilteredElements: []
+				})
+			}
+			else {
+				this.setState({
+					globalSearchCheckbox: !this.state.globalSearchCheckbox,
+					pageDropdownVal: "select",
+					filteredElements: [],
+					globalFilteredElements: []
+				})
+			}
 				//globalFilteredElements
 				
 		}
@@ -2135,20 +1171,6 @@
 
 			}
 
-
-			
-			/*					
-			for (let r = iActualRowsCount; r <= iFinalRowsCount; r++ ){
-
-				oNewRow = oTable.insertRow(r);
-			
-				oAction = oNewRow.insertCell(0);
-				
-
-				var sAction = typeof(aStepsToAppend[arrayIndexCounter]["Action"]) == "undefined" ? "": aStepsToAppend[arrayIndexCounter]["Action"];
-					sAction = sAction.trim();
-			}
-			*/
 		}
         render() {
 			let svg;
@@ -2190,10 +1212,7 @@
 					<div className="row">
 						<div className="toolbarwrapper">
 							<div className="toolbarContainer">
-								<div className="selBrowser">
-										Select Resitory Source
-										<Dropdown dval={this.state.sourceOption} type={"page"} items={this.state.sourcesOptions} change={this.chooseSource} />
-									</div>
+
 								
 
 								<ManualORModule renderSourceOption={this.state.renderSourceOption} uploadORSheets={this.uploadORSheets} />
@@ -2252,7 +1271,7 @@
 						
 							<div className="tablesContainer">
 								<div className="elementsTable">
-									<Elements xmlReadDone={this.state.xmlReadDone} tableChilds={this.state.filteredElements} globalFilteredElements={this.state.globalFilteredElements} addCase={this.addCase}
+									<Elements pageDropdownVal={this.state.pageDropdownVal} xmlReadDone={this.state.xmlReadDone} tableChilds={this.state.filteredElements} globalFilteredElements={this.state.globalFilteredElements} addCase={this.addCase}
 										oWebScreenNObjects={this.state.oWebScreenNObjects} oAndroidScreenNObjects={this.state.oAndroidScreenNObjects} oIosScreenNObjects={this.state.oIosScreenNObjects}
 										oOtherMobileScreenNObjects={this.state.oOtherMobileScreenNObjects} OSName={this.state.osDropdownVal} pageName={this.state.pageDropdownVal}
 										globalSearchCheckbox={this.state.globalSearchCheckbox}
@@ -2298,7 +1317,7 @@
 							<div onClick={this.props.uploadORSheets} className="upload-or-button">
 								<div className="upload-or"></div>
 								<p className="upload-text">Import OR</p>
-								<img src={"icons/xls-icon.png"} height="42" />
+								<img src={"icons/xlsx-icon.png"} height="42" />
 							</div>
 						</div>
 					</div>
@@ -2360,6 +1379,13 @@
 		componentDidMount(){
 
 		}
+		/*
+			handleORFileChange
+
+			Main handler to load the Object Repository files. Files will be stored in state object.
+
+			Input: input change event object
+		*/
         handleORFileChange (e) {
 		
             var files = e.target.files;
@@ -2382,9 +1408,9 @@
 					osName = OSMOBILEType;
 				}
 
-				if (filePath.indexOf('objectrepository/') >= 0) {
+				//if (filePath.indexOf('objectrepository/') >= 0) { // NOTE: 9/1/2022 [ commented in order to allow any folder. Remove restrictio to contain 'objectrepository' path ]
 					this.getSheetsName(file, osName);
-				}
+				//}
             }
 			//console.log("as;ldkfj;asldkfj;alksdfj;alksdjf;alksdjf;laksdjf;klasjd;flkj");
 			document.getElementsByClassName("upload-done-message")[1].style.display = "block";
@@ -2444,7 +1470,7 @@
 					<div className="import-container-or">
 						<span onClick={this.props.uploadORSheets} className="import-close">×</span>
 						<div className="droppable">
-							<h3 onClick={this.showFileWindow} className="choose-file" id="showfileselection" >Click to choose OR file(s)</h3>
+							<h3 onClick={this.showFileWindow} className="choose-file" id="showfileselection" >Click to choose OR files folder</h3>
 							<b className="inline-element upload-done-message">Document uploaded successfully!</b>
 						</div>
 						<input className="input-xls-select" id="input-xls-select"  multiple type = "file" webkitdirectory="" onChange={this.handleORFileChange} />
@@ -2745,12 +1771,14 @@
 						*/
 
 						
-					
+						
 					// iGlobalKeyCounter+ 1 + `${p}` + `${o}`
 						oElementsToDisplay.push(
 							<tr key={p + o + iGlobalKeyCounter + ObjectName}>
 								<td className="element-name-width">{ObjectName}<div className="toggable-selector-name"><hr />{SelectorValue}</div></td>
 								<td><div className="addCase" onClick={() => this.addCase(globalFilteredElements[p].objects[o], globalFilteredElements[p].screenName)}>+</div></td>
+								
+								<td><div className="gg-copy" onClick={() => navigator.clipboard.writeText(`${globalFilteredElements[p].screenName}\t${globalFilteredElements[p].objects[o]["Object Name"]}`)}></div></td>
 							</tr>
 						);
 					}
@@ -2787,6 +1815,7 @@
 								<tr key={iGlobalKeyCounter}>
 									<td className="element-name-width">{ObjectName}<div className="toggable-selector-name"><hr />{SelectorValue}</div></td>
 									<td><div className="addCase" onClick={() => this.addCase(oAllElements[el])}>+</div></td>
+									<td><div className="gg-copy" onClick={() => navigator.clipboard.writeText(`${this.props.pageDropdownVal}\t${oAllElements[el]["Object Name"]}`)}></div></td>
 								</tr>
 							);	
 						}
@@ -2795,6 +1824,7 @@
 								<tr key={iGlobalKeyCounter}>
 									<td className="element-name-width">{ObjectName}<hr />{oAllElements[el]["Value"]}<p></p><div className="toggable-selector-name">{SelectorValue}</div></td>
 									<td><div className="addCase" onClick={() => this.addCase(oAllElements[el])}>+</div></td>
+									<td><div className="gg-copy" onClick={() => navigator.clipboard.writeText(`${this.props.pageDropdownVal}\t${oAllElements[el]["Object Name"]}`)}></div></td>
 								</tr>
 							);	
 						}
@@ -2845,9 +1875,11 @@
     class Dropdown extends React.Component {
         
         render() {
-	
-            this.change = this.props.change;
-			
+
+			this.change = this.props.change;
+
+			let sortedItems = this.props.items.sort();
+
             let names = this.props.items.map((name, i) => 
                  <option key={i}>{name}</option>
             );
@@ -3015,7 +2047,7 @@
 
 			if (this.props.type == "input"){
 				switch (keyword){
-
+					
 					case "Input".toLowerCase():
 						tags = ["ON", "OFF", "text", "ByPartialText||dropdown-partial-text", "ByPartialText||dropdown-partial-text||partial-text-2"];
 						break;
@@ -3053,7 +2085,9 @@
 					case "WaitFor".toLowerCase():
 						tags = ["Implicit", "VisibilityOf||max-wait-time", "InvisibilityOf||max-wait-time", "ElementToBeClickable||max-wait-time", "ElementToBeSelected||max-wait-time", "AlertIsPresent||max-wait-time",
 								"AlertIsPresent||max-wait-time", "FrameToBeAvailableandSwitchToIt||max-wait-time", "TextToBePresentInElement||max-wait-time||expected-text","TextToBePresentInElementLocated||max-wait-time||expected-text",
-								"TextToBePresentInElementValue||max-wait-time||expected-value(value property...not the text)"];//["value || ", "Exists", "DoesNotExist"];
+								"TextToBePresentInElementValue||max-wait-time||expected-value(value property...not the text)",
+								"ElementNotInDOM||max-wait-time"
+								];
 						break;
 					case "SetTableRow".toLowerCase():
 						tags = ["text-to-search", "text-1-to-search||text-n+1-to-search"];
@@ -3236,32 +2270,8 @@
 		}
 		//value = {this.props.actionNameVal}
 //https://stackoverflow.com/questions/8238407/how-to-parse-excel-file-in-javascript-html5 
-/*
-<tr>
-<td><select>{actions}</select></td>
-<td></td>
-<td><textarea className="action-input-width"></textarea></td>
-<td></td><td><textarea className="action-input-width"></textarea></td>
-<td className="delCase">
-	<div className="close" onClick={this.props.delCase}> &times;</div>
-</td>
-</tr>
-*/
+
         render(){
-			//console.log("Case component called");
-			//this.delCase = this.props.delCase; 
-            //console.log(this.props.tableChilds);
-			//let sortedActions = this.props.actions.sort();
-			//sortedActions.unshift("Select");
-			
-		//	let actions = sortedActions.map((e, i) =>{
-				//if (e=="Launch"){
-				//	return <option selected key={i}>{e}</option>
-				//}
-				//else{
-			//		return <option key={i}>{e}</option>
-				//}
-			//});
 			
             let toDisplay = this.props.testSteps.map((element, i) => 			
 		   		<TR ShowCallToSteps={this.props.ShowCallToSteps} callToFeatures={this.props.callToFeatures} delCase={this.props.delCase} object={element} actions={this.props.actions} key={i} actionNameVal={this.props.actionNameVal} actionChange={this.props.actionChange} />
