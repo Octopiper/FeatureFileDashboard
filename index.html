@@ -1777,8 +1777,7 @@
 							<tr key={p + o + iGlobalKeyCounter + ObjectName}>
 								<td className="element-name-width">{ObjectName}<div className="toggable-selector-name"><hr />{SelectorValue}</div></td>
 								<td><div className="addCase" onClick={() => this.addCase(globalFilteredElements[p].objects[o], globalFilteredElements[p].screenName)}>+</div></td>
-								
-								<td><div className="gg-copy" onClick={() => navigator.clipboard.writeText(`${globalFilteredElements[p].screenName}\t${globalFilteredElements[p].objects[o]["Object Name"]}`)}></div></td>
+								<td><div className="gg-copy" onClick={() => navigator.clipboard.writeText(`${globalFilteredElements[p].screenName}|${globalFilteredElements[p].objects[o]["Object Name"]}`)}></div></td>
 							</tr>
 						);
 					}
@@ -1815,7 +1814,7 @@
 								<tr key={iGlobalKeyCounter}>
 									<td className="element-name-width">{ObjectName}<div className="toggable-selector-name"><hr />{SelectorValue}</div></td>
 									<td><div className="addCase" onClick={() => this.addCase(oAllElements[el])}>+</div></td>
-									<td><div className="gg-copy" onClick={() => navigator.clipboard.writeText(`${this.props.pageDropdownVal}\t${oAllElements[el]["Object Name"]}`)}></div></td>
+									<td><div className="gg-copy" onClick={() => navigator.clipboard.writeText(`${this.props.pageDropdownVal}|${oAllElements[el]["Object Name"]}`)}></div></td>
 								</tr>
 							);	
 						}
@@ -1824,7 +1823,7 @@
 								<tr key={iGlobalKeyCounter}>
 									<td className="element-name-width">{ObjectName}<hr />{oAllElements[el]["Value"]}<p></p><div className="toggable-selector-name">{SelectorValue}</div></td>
 									<td><div className="addCase" onClick={() => this.addCase(oAllElements[el])}>+</div></td>
-									<td><div className="gg-copy" onClick={() => navigator.clipboard.writeText(`${this.props.pageDropdownVal}\t${oAllElements[el]["Object Name"]}`)}></div></td>
+									<td><div className="gg-copy" onClick={() => navigator.clipboard.writeText(`${this.props.pageDropdownVal}|${oAllElements[el]["Object Name"]}`)}></div></td>
 								</tr>
 							);	
 						}
